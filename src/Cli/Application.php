@@ -11,7 +11,7 @@ class Application
 
   public function __construct($name)
   {
-    $this->name   = $name;
+    $this->name = $name;
   }
 
   public function parse_options()
@@ -38,6 +38,10 @@ class Application
     {
       return true;
     }
+    elseif (true === array_key_exists('SOAP_'.strtoupper($option), $_SERVER))
+    {
+      return true;
+    }
     else
     {
       return false;
@@ -54,10 +58,19 @@ class Application
     {
       return $this->options[rtrim($this->params[$option]['short'], ':')];
     }
+    elseif (true === array_key_exists('SOAP_'.strtoupper($option), $_SERVER))
+    {
+      return $_SERVER['SOAP_'.strtoupper($option)];
+    }
     else
     {
       return $default;
     }
+  }
+
+  public function set_option($option, $value)
+  {
+    $this->options[$option] = $value;
   }
 
   public function set_params($params)

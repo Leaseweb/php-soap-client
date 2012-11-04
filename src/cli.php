@@ -31,8 +31,11 @@ $PARAMS = array(
     'short' => 'e:',
     'long'  => 'endpoint:',
   ),
+  'method' => array(
+    'short' => 'm:',
+    'long'  => 'method:',
+  ),
 );
-
 
 $app = new Cli\Application($_SERVER['argv'][0]);
 $app->set_help($HELP);
@@ -40,6 +43,7 @@ $app->set_params($PARAMS);
 $app->parse_options();
 
 $log = new Cli\Logger();
+
 if (true === $app->has_option('quiet'))
 {
   $log->set_level(Logger::ERROR);
@@ -52,20 +56,40 @@ if (true === $app->has_option('help'))
 }
 
 
-
-if (false === $app->has_option('endpoint') && true === isset($_SERVER['SOAP_ENDPOINT']))
-{
-  $app->set_option('endpoint', $_SERVER['SOAP_ENDPOINT']);
-}
-
 $endpoint = $app->get_option('endpoint');
+$method = $app->get_option('method');
 
 if (true === empty($endpoint))
 {
-  $log->error('ERROR: you must specify and endpoint');
+  $log->error('ERROR: You must specify an endpoint');
   exit(1);
 }
 
-$log->info('Using endpoint: %s', $endpoint);
+try
+{
+  $log->info('Discovering wsdl at endpoint: %s', $endpoint);
+  $remote_service = new Soap\Explorer($endpoint);
+}
+catch (\Exception $e)
+{
+  $log->error('ERROR: Could not initialize endpoint');
+  exit(1);
+}
+
+if (true === empty($method))
+{
+  $log->info('No method provided. Listing all methods:');
+  foreach ($remote_service->list_methods() as $method)
+  {
+    $log->info(' - %s', $method);
+  }
+}
+else
+{
+  $log->info('Calling method %s', $method);
+  $remote_service->call_method($method, array());
+}
+
+
 exit(0);
 
