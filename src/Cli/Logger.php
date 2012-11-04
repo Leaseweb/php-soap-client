@@ -23,24 +23,37 @@ class Logger
 
   public function debug()
   {
-    $this->log(self::DEBUG, func_get_args());
+    $this->_log_stdout(self::DEBUG, func_get_args());
   }
 
   public function info()
   {
-    $this->log(self::INFO, func_get_args());
+    $this->_log_stdout(self::INFO, func_get_args());
+  }
+
+  public function warn()
+  {
+    $this->_log_stderr(self::WARN, func_get_args());
   }
 
   public function error()
   {
-    $this->log(self::ERROR, func_get_args());
+    $this->_log_stderr(self::ERROR, func_get_args());
   }
 
-  protected function log($level, $args)
+  protected function _log_stdout($level, $args)
   {
     if ($level >= $this->level)
     {
-      echo call_user_func_array('sprintf', $args) . PHP_EOL;
+      file_put_contents('php://stdout', call_user_func_array('sprintf', $args) . PHP_EOL);
+    }
+  }
+
+  protected function _log_stderr($level, $args)
+  {
+    if ($level >= $this->level)
+    {
+      file_put_contents('php://stderr', call_user_func_array('sprintf', $args) . PHP_EOL);
     }
   }
 }
