@@ -10,13 +10,18 @@ $PHAR_FILE = $BUILD_DIR . DIRECTORY_SEPARATOR . $PHAR_NAME;
 
 @unlink($PHAR_FILE);
 $phar = new Phar($PHAR_FILE, 0, $PHAR_NAME);
-$phar->buildFromDirectory($SRC_DIR, '/\.php$/');
-// $phar->setStub($phar->createDefaultStub("soap_client.php"));
+// $phar->buildFromDirectory($SRC_DIR, '/\.php$/');
 
-// copy($src_root . "/config.ini", $build_root . "/config.ini");
+$oDir = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($SRC_DIR), RecursiveIteratorIterator::SELF_FIRST);
+foreach ($oDir as $sFile)
+{
+  if (preg_match('/\\.php$/i', $sFile))
+  {
+    $phar->addFromString(substr($sFile, strlen($SRC_DIR)+1), php_strip_whitespace($sFile));
+  }
+}
 
 $stub = <<<'EOD'
-#!/usr/bin/env php
 <?php
 Phar::interceptFileFuncs();
 Phar::mungServer(array('REQUEST_URI', 'PHP_SELF', 'SCRIPT_NAME'));
