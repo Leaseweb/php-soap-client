@@ -46,7 +46,7 @@ $log = new Cli\Logger();
 
 if (true === $app->has_option('quiet'))
 {
-  $log->set_level(Logger::ERROR);
+  $log->set_level(Cli\Logger::ERROR);
 }
 
 if (true === $app->has_option('help'))
@@ -68,11 +68,12 @@ if (true === empty($endpoint))
 try
 {
   $log->info('Discovering wsdl at endpoint: %s', $endpoint);
-  $remote_service = new Soap\Explorer($endpoint);
+  $remote_service = new Soap\Explorer($endpoint, WSDL_CACHE_MEMORY);
 }
 catch (\Exception $e)
 {
   $log->error('ERROR: Could not initialize endpoint');
+  $log->error($e->getMessage());
   exit(1);
 }
 
@@ -81,15 +82,36 @@ if (true === empty($method))
   $log->info('No method provided. Listing all methods:');
   foreach ($remote_service->list_methods() as $method)
   {
-    $log->info(' - %s', $method);
+    echo $method.PHP_EOL;
   }
 }
 else
 {
   $log->info('Calling method %s', $method);
-  $remote_service->call_method($method, array());
+
+  $input_xml = $app->read_from_stdin(true);
+
+  if (null === $input_xml)
+  {
+    $log->info('No input was provided. Generating a sample request object.');
+    $request_xml = $remote_service->generate_request_xml($method);
+    echo $request_xml;
+  }
+  else
+  {
+    try
+    {
+      $log->info(sprintf('Making the request %s', $method));
+      $response = $remote_service->call_method($method, $input_xml);
+      print_r($response);
+    }
+    catch (Exception $e)
+    {
+      $log->error(sprintf('Error while calling %s on %s', $method, $endpoint));
+      $log->error($e->getMessage());
+      exit(1);
+    }
+  }
 }
 
-
 exit(0);
-

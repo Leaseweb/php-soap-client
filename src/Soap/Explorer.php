@@ -9,33 +9,42 @@ class Explorer
   const DEFAULT_TIMEOUT = 120;
 
   protected $wsdl;
-  protected $_soap_client;
+  protected $soap_client;
 
-  public function __construct($wsdl)
+  public function __construct($wsdl, $wsdl_cache = WSDL_CACHE_NONE)
   {
     //TODO: add verbose parameter to enable more logging
 
     ini_set('default_socket_timeout', self::DEFAULT_TIMEOUT);
-    ini_set('soap.wsdl_cache_enabled', 0);
+    ini_set('soap.wsdl_cache_enabled', $wsdl_cache);
 
     $this->wsdl = $wsdl;
-    $this->soap_client = new \SoapClient($wsdl, array(
+    $this->soap_client = new PimpedSoapClient($wsdl, array(
       'trace' => 1,
       'exceptions' => true,
       'connection_timeout' => self::DEFAULT_TIMEOUT,
-      'cache_wsdl' => WSDL_CACHE_NONE
+      'cache_wsdl' => $wsdl_cache
     ));
   }
 
   public function list_methods()
   {
-    //TODO: implement this method
+    //TODO: refactor this method
+    return $this->soap_client->__getMethods();
   }
 
-  public function call_method($method, $args=null)
+  public function call_method($method, $xml)
   {
-    //TODO: implement this method
-    return $this->soap_client->$method($args);
+    //TODO: refactor this method to use exceptions so state can be cleaned up
+    $this->soap_client->_requestData = $xml;
+    return $this->soap_client->$method($xml);
+  }
+
+  public function generate_request_xml($method)
+  {
+    return $this->soap_client->$method(
+      $this->soap_client->__getRequestObjectForMethod($method)
+    );
   }
 
 }
