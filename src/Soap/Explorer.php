@@ -30,7 +30,7 @@ class Explorer
   public function list_methods()
   {
     //TODO: refactor this method
-    return $this->soap_client->__getMethods();
+    return array_keys($this->soap_client->__getMethods());
   }
 
   public function call_method($method, $xml)
