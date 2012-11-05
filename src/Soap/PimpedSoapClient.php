@@ -4,6 +4,8 @@ namespace Soap;
 
 class PimpedSoapClient extends \SoapClient
 {
+  protected $_default_value = '%%?%%';
+
   protected $_structs;
   protected $_methods;
   protected $_dry_run;
@@ -25,6 +27,11 @@ class PimpedSoapClient extends \SoapClient
     return $this->_methods;
   }
 
+  public function __get_default_value()
+  {
+    return $this->_default_value;
+  }
+
   public function __doRequest($request, $location, $action, $version='1')
   {
     if (true === isset($this->_requestData))
@@ -33,15 +40,7 @@ class PimpedSoapClient extends \SoapClient
     }
     else
     {
-      $dom = new \DOMDocument;
-      $dom->preserveWhiteSpace = false;
-      $dom->loadXML($request);
-      $dom->formatOutput = true;
-
-      $output = $dom->saveXml();
-
-      echo $output . PHP_EOL;
-      exit(0);
+      return '';
     }
   }
 
@@ -67,7 +66,7 @@ class PimpedSoapClient extends \SoapClient
     }
     else
     {
-      return '';
+      return $this->__get_default_value();
     }
   }
 

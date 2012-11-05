@@ -42,9 +42,17 @@ class Explorer
 
   public function generate_request_xml($method)
   {
-    return $this->soap_client->$method(
-      $this->soap_client->__getRequestObjectForMethod($method)
-    );
+    $request = $this->soap_client->__getRequestObjectForMethod($method);
+    $this->soap_client->$method($request);
+
+    $dom = new \DOMDocument;
+    $dom->loadXML($this->soap_client->__getLastRequest());
+    $dom->preserveWhiteSpace = false;
+    $dom->formatOutput = true;
+
+    $result = str_replace($this->soap_client->__get_default_value(), '', $dom->saveXml());
+
+    return preg_replace('/^<\?xml *version="1.0" *encoding="UTF-8" *\?>\n/i', '', $result);
   }
 
 }
