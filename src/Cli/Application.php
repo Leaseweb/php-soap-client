@@ -87,4 +87,25 @@ class Application
   {
     $this->help_text = $help_text;
   }
+
+  public function read_from_stdin($non_blocking = false)
+  {
+    $stream = fopen('php://stdin', 'r');
+
+    $buffer = null;
+
+    if (true === $non_blocking)
+    {
+      stream_set_blocking($stream, 0);
+    }
+
+    while($line = fgets($stream, 4096))
+    {
+      $buffer .= $line;
+    }
+
+    fclose($stream);
+
+    return $buffer;
+  }
 }
