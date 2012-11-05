@@ -46,9 +46,15 @@ class PimpedSoapClient extends \SoapClient
 
   public function __getRequestObjectForMethod($methodName)
   {
-    $argument_struct = $this->_methods[$methodName]; 
+    $arguments = $this->_methods[$methodName]; 
+    $object = array();
 
-    return $this->__doRecurseStructs($argument_struct);
+    foreach ($arguments as $arg => $struct)
+    {
+      $object[] = $this->__doRecurseStructs($struct);
+    }
+
+    return $object;
   }
 
   protected function __doRecurseStructs($struct_name)
@@ -75,9 +81,15 @@ class PimpedSoapClient extends \SoapClient
     $this->_methods = array();
     foreach ($this->__getFunctions() as $raw_method)
     {
-      //TODO: add support for more then one function argument
-      preg_match('/\w+ (?P<method>\w+)\((?P<args>[^ ]*)/', $raw_method, $matches);
-      $this->_methods[$matches['method']] = $matches['args'];
+      preg_match('/(?P<response>\w+) (?P<method>\w+)\((?P<args>[^\)]+)/', $raw_method, $matches);
+
+      foreach (explode(', ', $matches['args']) as $arg)
+      {
+        preg_match('/(?P<type>\w+) \$(?P<name>\w+)/', $arg, $matches2);
+        $this->_methods[$matches['method']][$matches2['name']] = $matches2['type'];
+        unset($matches2);
+      }
+      unset($matches);
     }
   }
 

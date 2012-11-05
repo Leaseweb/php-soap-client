@@ -43,7 +43,7 @@ class Explorer
   public function generate_request_xml($method)
   {
     $request = $this->soap_client->__getRequestObjectForMethod($method);
-    $this->soap_client->$method($request);
+    $this->soap_client->__call($method, $request);
 
     $dom = new \DOMDocument;
     $dom->loadXML($this->soap_client->__getLastRequest());
