@@ -56,5 +56,11 @@ class Logger
       file_put_contents('php://stderr', call_user_func_array('sprintf', $args) . PHP_EOL);
     }
   }
+
+  protected function _get_curr_time()
+  {
+    list($microSec, $timeStamp) = explode(" ", microtime());
+    return sprintf('[%s:%s]', date('Y-m-d H:i', $timeStamp), date('s', $timeStamp) + $microSec);
+  }
 }
 
