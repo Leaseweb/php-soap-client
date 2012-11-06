@@ -2,17 +2,23 @@
 
 require_once 'autoloader.php';
 
-$HELP = 'Usage: %s <method>
+$HELP = 'Usage: %s --endpoint wsdl [--method name] [--quiet]
 
-OPTIONS
+  OPTIONS
 
-  -h, --help      Print this help message
-  -q, --quiet     Surpress any kind of output
-  -e, --endpoint  Specify the wsdl to inspect. Alternatively you can
-                  set the environment variable SOAP_ENDPOINT
-  -m, --method    Specify the method to call on the remove service
-                  Alternatively you can set the environment variable
-                  SOAP_METHOD
+    -h, --help      Print this help message
+    -q, --quiet     Surpress any kind of output
+    -e, --endpoint  Specify the wsdl to inspect. Alternatively you can
+                    set the environment variable SOAP_ENDPOINT
+    -m, --method    Specify the method to call on the remote service
+                    Alternatively you can set the environment variable
+                    SOAP_METHOD
+
+  EXAMPLES
+
+    List all available methods:
+
+      soap_client --endpoint http://example.com/Service.wsdl 
 
 ';
 
