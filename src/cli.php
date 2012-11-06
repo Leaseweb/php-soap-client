@@ -13,6 +13,8 @@ $HELP = 'Usage: %s --endpoint wsdl [--method name] [--quiet]
     -m, --method    Specify the method to call on the remote service
                     Alternatively you can set the environment variable
                     SOAP_METHOD
+    -c, --cache     Flag to enable caching of the wsdl. By default this is
+                    disabled.
 
   EXAMPLES
 
@@ -39,6 +41,11 @@ $PARAMS = array(
   'method' => array(
     'short' => 'm:',
     'long'  => 'method:',
+  ),
+  'cache' => array(
+    'short' => 'c',
+    'long' => 'cache:',
+    'default' => false,
   ),
 );
 
@@ -73,7 +80,18 @@ if (true === empty($endpoint))
 try
 {
   $log->info('Discovering wsdl at endpoint: %s', $endpoint);
-  $remote_service = new Soap\Explorer($endpoint, WSDL_CACHE_MEMORY);
+  if (true === $app->has_option('cache'))
+  {
+    $log->debug('Enabling caching of wsdl');
+    $cache = WSDL_CACHE_MEMORY;
+  }
+  else
+  {
+    $log->debug('Wsdls are not being cached.');
+    $cache = WSDL_CACHE_NONE;
+  }
+
+  $remote_service = new Soap\Explorer($endpoint, $cache);
 }
 catch (\Exception $e)
 {
