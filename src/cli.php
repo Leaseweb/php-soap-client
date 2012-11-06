@@ -66,7 +66,7 @@ $method = $app->get_option('method');
 
 if (true === empty($endpoint))
 {
-  $log->error('ERROR: You must specify an endpoint');
+  $log->error('You must specify an endpoint');
   exit(1);
 }
 
@@ -77,7 +77,7 @@ try
 }
 catch (\Exception $e)
 {
-  $log->error('ERROR: Could not initialize endpoint');
+  $log->error('Could not initialize endpoint');
   $log->error($e->getMessage());
   exit(1);
 }
