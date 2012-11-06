@@ -18,6 +18,8 @@ Usage
       -m, --method    Specify the method to call on the remote service
                       Alternatively you can set the environment variable
                       SOAP_METHOD
+      -c, --cache     Flag to enable caching of the wsdl. By default this is
+                      disabled.
 
     EXAMPLES
 
