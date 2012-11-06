@@ -1,14 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-$PHAR_NAME = 'soap_client.phar';
+$PHAR_NAME = 'soap_client';
 
 $SRC_DIR   = __DIR__ . DIRECTORY_SEPARATOR . 'src';
 $BUILD_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'build';
 
-$PHAR_FILE = $BUILD_DIR . DIRECTORY_SEPARATOR . $PHAR_NAME;
+$PHAR_FILE = $BUILD_DIR . DIRECTORY_SEPARATOR . $PHAR_NAME . '.phar';
 
-@unlink($PHAR_FILE);
 $phar = new Phar($PHAR_FILE, 0, $PHAR_NAME);
 // $phar->buildFromDirectory($SRC_DIR, '/\.php$/');
 
@@ -22,6 +21,7 @@ foreach ($oDir as $sFile)
 }
 
 $stub = <<<'EOD'
+#!/usr/bin/env php
 <?php
 Phar::interceptFileFuncs();
 Phar::mungServer(array('REQUEST_URI', 'PHP_SELF', 'SCRIPT_NAME'));
