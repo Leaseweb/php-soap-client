@@ -10,10 +10,9 @@ OPTIONS
   -q, --quiet     Surpress any kind of output
   -e, --endpoint  Specify the wsdl to inspect. Alternatively you can
                   set the environment variable SOAP_ENDPOINT
-
-ARGUMENTS
-
-  method          The method to call on the endpoint
+  -m, --method    Specify the method to call on the remove service
+                  Alternatively you can set the environment variable
+                  SOAP_METHOD
 
 ';
 
