@@ -29,11 +29,7 @@ Usage
 Installation
 ============
 
-To install `soap_client` in `/usr/local/bin` do:
-
-    sudo wget -O /usr/local/bin/soap_client https://github.com/nrocco/php-soap-client/raw/master/soap_client
-
-Or alternatively you can checkout the source code and build from there:
+To install `soap_client` in `/usr/local/bin` you can checkout the source code and build from there:
 
     git clone https://github.com/nrocco/php-soap-client.git
     make
