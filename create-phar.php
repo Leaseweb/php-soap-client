@@ -22,6 +22,7 @@ foreach ($oDir as $sFile)
 }
 
 $stub = <<<'EOD'
+#!/usr/bin/env php
 <?php
 Phar::interceptFileFuncs();
 Phar::mungServer(array('REQUEST_URI', 'PHP_SELF', 'SCRIPT_NAME'));
