@@ -4,6 +4,8 @@ require_once 'autoloader.php';
 
 $HELP = 'Usage: %s --endpoint wsdl [--quiet] [--cache] [action] [method]
 
+Version 1.1
+
   OPTIONS
 
     -h, --help      Print this help message
