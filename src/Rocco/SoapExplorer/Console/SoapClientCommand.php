@@ -77,6 +77,8 @@ class SoapClientCommand extends Application
         $endpoint = $this->get_option('endpoint');
         $this->log->info('Discovering wsdl at endpoint: %s', $endpoint);
 
+        $t1 = microtime(true);
+
         ini_set('soap.wsdl_cache_enabled', $cache);
         $this->remote_service = new SoapClient($endpoint, array(
           'trace' => 1,
@@ -84,6 +86,9 @@ class SoapClientCommand extends Application
           'connection_timeout' => self::DEFAULT_TIMEOUT,
           'cache_wsdl' => $cache,
         ));
+
+        $this->log->info('Initializing soap service took %s seconds', microtime(true) - $t1);
+        unset($t1);
       }
 
       switch ($this->get_argument(1))
@@ -150,8 +155,12 @@ class SoapClientCommand extends Application
       try
       {
         $this->log->info('Calling method %s on the remote', $method);
+        $t1 = microtime(true);
         $this->remote_service->_requestData = $input_xml;
         $response = $this->remote_service->$method($input_xml);
+        $this->log->info('Calling method took %s seconds', microtime(true) - $t1);
+        unset($t1);
+
         print_r($response);
 
         return 0;
