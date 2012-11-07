@@ -22,22 +22,6 @@ _soap_client_completions()
                
         COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
         return 0
-                
-        # if [[ ${COMP_CWORD} = 1 ]] ; then
-        #         opts=$(${soap_client} __check__)
-        #         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        #         return 0
-        # fi
-
-        # if [[ ${COMP_CWORD} = 2 ]] ; then
-        #         opts=$(${soap_client} __check__ $prev)
-        #         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        #         return 0
-        # fi
-
-        # COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-        # return 0;
 }
 
 complete -F _soap_client_completions soap_client
-
