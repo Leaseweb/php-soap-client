@@ -177,6 +177,10 @@ class Application
     {
       stream_set_blocking($stream, 0);
     }
+    else
+    {
+      stream_set_blocking($stream, 1);
+    }
 
     while($line = fgets($stream, 4096))
     {
