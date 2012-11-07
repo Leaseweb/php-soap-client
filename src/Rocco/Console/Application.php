@@ -1,6 +1,6 @@
 <?php
 
-namespace Cli;
+namespace Rocco\Console;
 
 class Application
 {
@@ -17,9 +17,29 @@ class Application
   public function __construct($name)
   {
     $this->name = $name;
+
+    $this->configure();
   }
 
-  public function parse_options()
+  protected function configure()
+  {
+    return;
+  }
+
+  public function bootstrap()
+  {
+    $this->parse_options();
+    $this->parse_arguments();
+
+    return $this->execute();
+  }
+
+  protected function execute()
+  {
+    return 0;
+  }
+
+  protected function parse_options()
   {
     if (true === $this->_options_parsed)
     {
@@ -40,7 +60,7 @@ class Application
     $this->_options_parsed = true;
   }
 
-  public function parse_arguments()
+  protected function parse_arguments()
   {
     if (true === $this->_arguments_parsed)
     {
@@ -147,7 +167,7 @@ class Application
     $this->help_text = $help_text;
   }
 
-  public function read_from_stdin($non_blocking = false)
+  protected function read_from_stdin($non_blocking = false)
   {
     $stream = fopen('php://stdin', 'r');
 

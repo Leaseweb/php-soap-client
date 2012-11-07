@@ -10,7 +10,10 @@ _soap_client_completions()
 
         case "$prev" in
                 call|request)
-                        opts=$(${soap_client} -q list 2> /dev/null | tr '\n' ' ')
+                        # local IFS=$'\n'
+                        # opts="AddOrder MarkServersReadyToProcess UpdateServerId GetOrderStatus SetInstallationStatus"
+                        # opts="$(${soap_client} -q list 2> /dev/null | tr '\n' ' ')"
+                        # opts="$(${soap_client} -q list 2> /dev/null)"
                         ;;
                 *)
                         opts="--help --cache --endpoint --quiet -e -q -h -c list call request"

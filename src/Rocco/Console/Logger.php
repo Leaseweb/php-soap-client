@@ -1,6 +1,7 @@
 <?php
 
-namespace Cli;
+namespace Rocco\Console;
+
 
 class Logger
 {

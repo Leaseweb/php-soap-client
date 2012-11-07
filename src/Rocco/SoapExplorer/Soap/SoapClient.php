@@ -1,8 +1,8 @@
 <?php
 
-namespace Soap;
+namespace Rocco\SoapExplorer\Soap;
 
-class PimpedSoapClient extends \SoapClient
+class SoapClient extends \SoapClient
 {
   protected $_default_value = '%%?%%';
 
