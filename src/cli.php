@@ -22,15 +22,6 @@ $HELP = 'Usage: %s --endpoint wsdl [--quiet] [--cache] [action] [method]
                     If action is not given, it defaults to list.
     [method]        Specify the method to call on the remote service
 
-
-  EXAMPLES
-
-    List all available methods:
-
-      soap_client --endpoint http://example.com/Service.wsdl
-
-      soap_client --endpoint http://example.com/Service.wsdl call CalculatePrice
-
 ';
 
 $app = new Rocco\SoapExplorer\Console\SoapClientCommand($_SERVER['argv'][0]);
