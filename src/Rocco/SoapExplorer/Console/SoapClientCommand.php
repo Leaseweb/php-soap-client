@@ -139,18 +139,17 @@ class SoapClientCommand extends Application
     }
     else
     {
-      $this->log->info('Calling method %s on the remote', $method);
       $input_xml = $this->read_from_stdin(true);
 
       if (null === $input_xml)
       {
-        $this->log->error('No xml was provided');
-        return 1;
+        $this->log->info('No xml read from stdin. Create xml below and finish with ctrl+d');
+        $input_xml = $this->read_from_stdin(false);
       }
 
       try
       {
-        $this->log->info(sprintf('Making the request %s', $method));
+        $this->log->info('Calling method %s on the remote', $method);
         $this->remote_service->_requestData = $input_xml;
         $response = $this->remote_service->$method($input_xml);
         print_r($response);
