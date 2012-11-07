@@ -44,37 +44,36 @@ class SoapClientCommand extends Application
 
   protected function execute()
   {
-    if (true === $this->has_option('quiet'))
+    try
     {
-      $this->log->set_level(Logger::ERROR);
-    }
-
-    if (true === $this->has_option('help'))
-    {
-      echo $this->get_help();
-      return 3;
-    }
-
-    if (false === $this->has_option('endpoint'))
-    {
-      $this->log->error('You must specify an endpoint');
-      return 1;
-    }
-    else
-    {
-      if (true === $this->has_option('cache'))
+      if (true === $this->has_option('quiet'))
       {
-        $this->log->debug('Enabling caching of wsdl');
-        $cache = WSDL_CACHE_MEMORY;
+        $this->log->set_level(Logger::ERROR);
+      }
+
+      if (true === $this->has_option('help'))
+      {
+        echo $this->get_help();
+        return 3;
+      }
+
+      if (false === $this->has_option('endpoint'))
+      {
+        throw new \Exception('You must specify an endpoint');
       }
       else
       {
-        $this->log->debug('Wsdls are not being cached.');
-        $cache = WSDL_CACHE_NONE;
-      }
+        if (true === $this->has_option('cache'))
+        {
+          $this->log->debug('Enabling caching of wsdl');
+          $cache = WSDL_CACHE_MEMORY;
+        }
+        else
+        {
+          $this->log->debug('Wsdls are not being cached.');
+          $cache = WSDL_CACHE_NONE;
+        }
 
-      try
-      {
         $endpoint = $this->get_option('endpoint');
         $this->log->info('Discovering wsdl at endpoint: %s', $endpoint);
 
@@ -86,33 +85,31 @@ class SoapClientCommand extends Application
           'cache_wsdl' => $cache,
         ));
       }
-      catch (\Exception $e)
-      {
-        $this->log->error('Could not initialize endpoint');
-        $this->log->error($e->getMessage());
 
-        return 1;
+      switch ($this->get_argument(1))
+      {
+        case 'list':
+          return $this->list_methods();
+          break;
+
+        case 'call':
+          return $this->call_method();
+          break;
+
+        case 'request':
+          return $this->request_method();
+          break;
+
+        default:
+          $this->log->error('No valid action provided');
+          return 1;
+          break;
       }
     }
-
-    switch ($this->get_argument(1))
+    catch (\Exception $e)
     {
-      case 'list':
-        return $this->list_methods();
-        break;
-
-      case 'call':
-        return $this->call_method();
-        break;
-
-      case 'request':
-        return $this->request_method();
-        break;
-
-      default:
-        $this->log->error('No valid action provided');
-        return 1;
-        break;
+      $this->log->error($e->getMessage());
+      return 1;
     }
 
     return 0;
@@ -134,14 +131,11 @@ class SoapClientCommand extends Application
 
   protected function call_method()
   {
-    //TODO: refactor this method to use exceptions so state can be cleaned up
     $method = $this->get_argument(2);
 
     if (false === isset($method))
     {
-      $this->log->error('You must specify a method name to call');
-
-      return 1;
+      throw new \Exception('You must specify a method name to call');
     }
     else
     {
@@ -166,8 +160,7 @@ class SoapClientCommand extends Application
       catch (Exception $e)
       {
         $this->log->error(sprintf('Error while calling %s on %s', $method, $endpoint));
-        $this->log->error($e->getMessage());
-        return 1;
+        throw $e;
       }
     }
   }
@@ -178,8 +171,7 @@ class SoapClientCommand extends Application
 
     if (false === isset($method))
     {
-      $this->log->error('You must specify a method name to generate a request');
-      return 1;
+      throw new \Exception('You must specify a method name to call');
     }
     else
     {
