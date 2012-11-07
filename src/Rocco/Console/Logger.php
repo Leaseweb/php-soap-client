@@ -1,6 +1,7 @@
 <?php
 
-namespace Cli;
+namespace Rocco\Console;
+
 
 class Logger
 {
@@ -10,6 +11,12 @@ class Logger
   const ERROR = 3;
 
   protected $level;
+  protected $labels = array(
+    0 => 'DEBUG',
+    1 => 'INFO',
+    2 => 'WARN',
+    3 => 'ERROR',
+  );
 
   public function __construct($level = 1)
   {
@@ -43,17 +50,31 @@ class Logger
 
   protected function _log_stdout($level, $args)
   {
-    if ($level >= $this->level)
-    {
-      file_put_contents('php://stdout', call_user_func_array('sprintf', $args) . PHP_EOL);
-    }
+    return $this->_log('php://stdout', $level, $args);
   }
 
   protected function _log_stderr($level, $args)
   {
+    return $this->_log('php://stderr', $level, $args);
+  }
+
+  protected function _log($stream, $level, $args)
+  {
     if ($level >= $this->level)
     {
-      file_put_contents('php://stderr', call_user_func_array('sprintf', $args) . PHP_EOL);
+      file_put_contents($stream, $this->_get_label_for($level) . call_user_func_array('sprintf', $args) . PHP_EOL);
+    }
+  }
+
+  protected function _get_label_for($level)
+  {
+    if (array_key_exists($level, $this->labels))
+    {
+      return '[' . $this->labels[$level] . '] ';
+    }
+    else
+    {
+      return '';
     }
   }
 

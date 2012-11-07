@@ -1,21 +1,51 @@
 <?php
 
-namespace Cli;
+namespace Rocco\Console;
 
 class Application
 {
   protected $name;
   protected $help_text;
-  protected $params;
-  protected $options;
+
+  protected $params = array();
+  protected $options = array();
+  protected $arguments = array();
+
+  private $_options_parsed = false;
+  private $_arguments_parsed = false;
 
   public function __construct($name)
   {
     $this->name = $name;
+
+    $this->configure();
   }
 
-  public function parse_options()
+  protected function configure()
   {
+    return;
+  }
+
+  public function bootstrap()
+  {
+    $this->parse_options();
+    $this->parse_arguments();
+
+    return $this->execute();
+  }
+
+  protected function execute()
+  {
+    return 0;
+  }
+
+  protected function parse_options()
+  {
+    if (true === $this->_options_parsed)
+    {
+      return;
+    }
+
     $short = '';
     $long = array();
 
@@ -26,6 +56,39 @@ class Application
     }
 
     $this->options = getopt($short, $long);
+
+    $this->_options_parsed = true;
+  }
+
+  protected function parse_arguments()
+  {
+    if (true === $this->_arguments_parsed)
+    {
+      return;
+    }
+
+    $this->arguments = $_SERVER['argv'];
+
+    $pruneargv = array();
+    foreach ($this->options as $option => $value)
+    {
+      foreach ($this->arguments as $key => $chunk)
+      {
+        $regex = '/^'. (isset($option[1]) ? '--' : '-') . $option . '/';
+        if ($chunk == $value && $this->arguments[$key-1][0] == '-' || preg_match($regex, $chunk))
+        {
+          array_push($pruneargv, $key);
+        }
+      }
+    }
+
+    while ($key = array_pop($pruneargv)) 
+    {
+      unset($this->arguments[$key]);
+    }
+
+    $this->arguments = array_values($this->arguments);
+    $this->_arguments_parsed = true;
   }
 
   public function has_option($option)
@@ -62,15 +125,31 @@ class Application
     {
       return $_SERVER['SOAP_'.strtoupper($option)];
     }
+    elseif (true === array_key_exists('default', $this->params[$option]))
+    {
+      return $this->params[$option]['default'];
+    }
     else
     {
       return $default;
     }
   }
 
-  public function set_option($option, $value)
+  public function get_argument($index, $default = null)
   {
-    $this->options[$option] = $value;
+    if (true === array_key_exists($index, $this->arguments))
+    {
+      return $this->arguments[$index];
+    }
+    else
+    {
+      return $default;
+    }
+  }
+
+  public function get_arguments()
+  {
+    return $this->arguments;
   }
 
   public function set_params($params)
@@ -88,7 +167,7 @@ class Application
     $this->help_text = $help_text;
   }
 
-  public function read_from_stdin($non_blocking = false)
+  protected function read_from_stdin($non_blocking = false)
   {
     $stream = fopen('php://stdin', 'r');
 
@@ -97,6 +176,10 @@ class Application
     if (true === $non_blocking)
     {
       stream_set_blocking($stream, 0);
+    }
+    else
+    {
+      stream_set_blocking($stream, 1);
     }
 
     while($line = fgets($stream, 4096))

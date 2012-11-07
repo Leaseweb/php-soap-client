@@ -1,0 +1,27 @@
+# Bash completion for soap_client
+
+_soap_client_completions()
+{
+        local cur prev opts soap_client
+        COMPREPLY=()
+        soap_client="${COMP_WORDS[0]}"
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+        case "$prev" in
+                call|request)
+                        # local IFS=$'\n'
+                        # opts="AddOrder MarkServersReadyToProcess UpdateServerId GetOrderStatus SetInstallationStatus"
+                        # opts="$(${soap_client} -q list 2> /dev/null | tr '\n' ' ')"
+                        # opts="$(${soap_client} -q list 2> /dev/null)"
+                        ;;
+                *)
+                        opts="--help --cache --endpoint --quiet -e -q -h -c list call request"
+                        ;;
+        esac
+               
+        COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+        return 0
+}
+
+complete -F _soap_client_completions soap_client
