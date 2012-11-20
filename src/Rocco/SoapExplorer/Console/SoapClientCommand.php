@@ -97,6 +97,10 @@ class SoapClientCommand extends Application
           return $this->list_methods();
           break;
 
+        case 'wsdl':
+          return $this->output_wsdl();
+          break;
+
         case 'call':
           return $this->call_method();
           break;
@@ -130,6 +134,13 @@ class SoapClientCommand extends Application
     {
       echo $method.PHP_EOL;
     }
+
+    return 0;
+  }
+
+  protected function output_wsdl()
+  {
+    echo file_get_contents($this->get_option('endpoint'));
 
     return 0;
   }
