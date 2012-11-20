@@ -16,7 +16,7 @@ _soap_client_completions()
                         # opts="$(${soap_client} -q list 2> /dev/null)"
                         ;;
                 *)
-                        opts="--help --cache --endpoint --quiet -e -q -h -c list call request"
+                        opts="--help --cache --endpoint --quiet -e -q -h -c list wsdl call request"
                         ;;
         esac
                

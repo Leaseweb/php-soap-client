@@ -19,6 +19,7 @@ Version 1.1
 
     [action]        The action to perform, can be either one of:
                      - list
+                     - wsdl
                      - request <method>
                      - call <method>
                     If action is not given, it defaults to list.
