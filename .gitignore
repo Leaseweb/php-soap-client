@@ -1,1 +1,2 @@
 build/*
+!build/soap_client.phar
