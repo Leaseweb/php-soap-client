@@ -38,6 +38,10 @@ class SoapClientCommand extends Application
         'short' => 'e:',
         'long'  => 'endpoint:',
       ),
+      'use-editor' => array(
+        'short' => 'u',
+        'long'  => 'use-editor',
+      ),
       'cache' => array(
         'short' => 'c',
         'long' => 'cache',
@@ -161,34 +165,43 @@ class SoapClientCommand extends Application
     {
       throw new \Exception('You must specify a method name to call');
     }
+
+    if ($this->has_option('use-editor'))
+    {
+      $editor = $_SERVER['EDITOR'];
+      $empty_request = $this->generate_xml_request($method);
+
+      $this->log->info('Starting editor: ' . $editor);
+      $input_xml = $this->read_from_editor($editor, $empty_request);
+    }
     else
     {
       $input_xml = $this->read_from_stdin(true);
+    }
 
-      if (null === $input_xml)
-      {
-        $this->log->info('No xml read from stdin. Create xml below and finish with ctrl+d');
-        $input_xml = $this->read_from_stdin(false);
-      }
+    if (null === $input_xml)
+    {
+      $this->log->info('Create xml request below and finish with ctrl+d');
+      $input_xml = $this->read_from_stdin(false);
+    }
 
-      try
-      {
-        $this->log->info('Calling method %s on the remote', $method);
-        $t1 = microtime(true);
-        $this->remote_service->_requestData = $input_xml;
-        $response = $this->remote_service->$method($input_xml);
-        $this->log->info('Calling method took %s seconds', microtime(true) - $t1);
-        unset($t1);
+    try
+    {
+      $this->log->info('Calling method %s on the remote', $method);
+      $t1 = microtime(true);
+      $this->remote_service->_requestData = $input_xml;
+      $response = $this->remote_service->$method($input_xml);
+      $this->log->info('Calling method took %s seconds', microtime(true) - $t1);
+      unset($t1);
 
-        print_r($response);
+      print_r($response);
 
-        return 0;
-      }
-      catch (Exception $e)
-      {
-        $this->log->error(sprintf('Error while calling %s on %s', $method, $endpoint));
-        throw $e;
-      }
+      return 0;
+    }
+    catch (Exception $e)
+    {
+      $this->log->error(sprintf('Error while calling %s on %s', $method, $endpoint));
+      throw $e;
     }
   }
 
@@ -203,23 +216,58 @@ class SoapClientCommand extends Application
     else
     {
       $this->log->info('Generating request for %s on remote', $method);
-
-      $request = $this->remote_service->__getRequestObjectForMethod($method);
-      $this->remote_service->__call($method, $request);
-
-      $dom = new \DOMDocument;
-      $dom->loadXML($this->remote_service->__getLastRequest());
-      $dom->preserveWhiteSpace = false;
-      $dom->formatOutput = true;
-
-      $result = $dom->saveXml();
-      $result = str_replace($this->remote_service->__get_default_value(), '', $result);
-      $result = preg_replace('/^<\?xml *version="1.0" *encoding="UTF-8" *\?>\n/i', '', $result);
-
-      echo $result;
+      echo $this->generate_xml_request($method);
 
       return 0;
     }
   }
 
+  protected function generate_xml_request($method)
+  {
+    $request = $this->remote_service->__getRequestObjectForMethod($method);
+    $this->remote_service->__call($method, $request);
+
+    $dom = new \DOMDocument;
+    $dom->loadXML($this->remote_service->__getLastRequest());
+    $dom->preserveWhiteSpace = false;
+    $dom->formatOutput = true;
+
+    $result = $dom->saveXml();
+    $result = str_replace($this->remote_service->__get_default_value(), '', $result);
+    $result = preg_replace('/^<\?xml *version="1.0" *encoding="UTF-8" *\?>\n/i', '', $result);
+
+    return $result;
+  }
+
+  protected function read_from_editor($editor, $contents=null)
+  {
+    $temp_file = tmpfile();
+    $temp_file_info = stream_get_meta_data($temp_file);
+
+    if (false === is_null($contents))
+    {
+      fwrite($temp_file, $contents);
+    }
+
+    $temp_filename = $temp_file_info['uri'];
+
+    $this->log->debug('Start editing file ' . $temp_filename);
+
+    system("$editor $temp_filename > `tty`");
+
+    fseek($temp_file, 0);
+    $input_xml = fread($temp_file, 1024);
+    fclose($temp_file);
+
+    if (0 === strcmp((string)$contents, $input_xml))
+    {
+      $this->log->debug('File wasn\'t modified');
+    }
+    else
+    {
+      $this->log->debug('File was modified using the editor');
+    }
+
+    return $input_xml;
+  }
 }
