@@ -7,20 +7,20 @@ A command line application to explore SOAP services
 Usage
 =====
 
-    php-cli-soap-client                                         version 1.2
+    php-cli-soap-client                                          version 1.2
                                                                Nico Di Rocco
 
     A command line application to explore SOAP web services
 
-    Usage: src/cli.php --endpoint wsdl [options] [action] [method]
+    Usage: build/soap_client.phar --endpoint wsdl [options] [action] [method]
 
 
     OPTIONS
 
         -h, --help       Print this help message.
         -q, --quiet      Surpress any kind of output. This option takes pre-
-                         cedence ofer the `-d` or `--debug` option.
-        -d, --debug      Output more verbose messages. Only works if `-q` or
+                         cedence ofer the `-v` or `--verbose` option.
+        -v, --verbose    Output more verbose messages. Only works if `-q` or
                          `--quiet` is not specified.
         -e, --endpoint   Specify the wsdl to inspect. Alternatively you can
                          set the environment variable SOAP_ENDPOINT.
@@ -45,7 +45,6 @@ Usage
     METHOD
 
         Specify the method to call on the remote service
-
 
 
 Installation

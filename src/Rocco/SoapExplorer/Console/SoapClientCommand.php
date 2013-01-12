@@ -22,8 +22,8 @@ OPTIONS
 
     -h, --help       Print this help message.
     -q, --quiet      Surpress any kind of output. This option takes pre-
-                     cedence ofer the `-d` or `--debug` option.
-    -d, --debug      Output more verbose messages. Only works if `-q` or
+                     cedence ofer the `-v` or `--verbose` option.
+    -v, --verbose    Output more verbose messages. Only works if `-q` or
                      `--quiet` is not specified.
     -e, --endpoint   Specify the wsdl to inspect. Alternatively you can
                      set the environment variable SOAP_ENDPOINT.
@@ -69,9 +69,9 @@ METHOD
         'long'    => 'quiet',
         'default' => false,
       ),
-      'debug' => array(
-        'short'   => 'd',
-        'long'    => 'debug',
+      'verbose' => array(
+        'short'   => 'v',
+        'long'    => 'verbose',
       ),
       'help' => array(
         'short' => 'h',
@@ -101,7 +101,7 @@ METHOD
       {
         $this->log->set_level(Logger::ERROR);
       }
-      elseif (true === $this->has_option('debug'))
+      elseif (true === $this->has_option('verbose'))
       {
         $this->log->set_level(Logger::DEBUG);
       }
