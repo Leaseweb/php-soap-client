@@ -12,24 +12,34 @@ Usage
 
     A command line application to explore SOAP web services
 
-    Usage: build/soap_client.phar --endpoint wsdl [options] [action] [method]
+    Usage: src/cli.php --endpoint wsdl [options] [action] [method]
 
 
     OPTIONS
 
+        All options below can also be set by specifying environment variables.
+        Environment variables are named like the long option's name in uppercase
+        and prepending it with SOAP_
+
+        So --endpoint http://example.com/soap.wsdl can also be set like this:
+
+          SOAP_ENDPOINT='http://example.com/soap.wsdl'
+
+
         -h, --help       Print this help message.
         -q, --quiet      Surpress any kind of output. This option takes pre-
-                         cedence ofer the `-v` or `--verbose` option.
-        -v, --verbose    Output more verbose messages. Only works if `-q` or
-                         `--quiet` is not specified.
-        -e, --endpoint   Specify the wsdl to inspect. Alternatively you can
-                         set the environment variable SOAP_ENDPOINT.
+                         cedence over the `-v` or `--verbose` option.
+        -v, --verbose    Output more verbose messages. If `-q` or `--quiet`
+                         is specified setting this option has no effect.
+        -e, --endpoint   Specify the url to the wsdl of the SOAP webservice
+                         to inspect. Alternatively you can
         -c, --cache      Flag to enable caching of the wsdl. By default this
                          is disabled.
         -u, --use-editor This option is only relevant when you use the `call`
                          action. If specified the editor in EDITOR environment
                          variable will be opened up.
         -x, --xml        Output responses in raw xml.
+
 
     ACTIONS
 
@@ -43,6 +53,7 @@ Usage
         call <method>    Call the remote service with the `method` specified
                          and output the reponse to stdout.
 
+
     METHOD
 
         Specify the method to call on the remote service
@@ -54,5 +65,5 @@ Installation
 To install `soap_client` in `/usr/local/bin` you can checkout the source code and build from there:
 
     git clone https://github.com/nrocco/php-soap-client.git
-    make
+    cd php-soap-client
     sudo make install
