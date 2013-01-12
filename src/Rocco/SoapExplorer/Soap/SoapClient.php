@@ -1,4 +1,4 @@
-<?php
+o<?php
 
 namespace Rocco\SoapExplorer\Soap;
 
@@ -12,6 +12,11 @@ class SoapClient extends \SoapClient
 
   public function __construct($endpoint, $options)
   {
+    if (true === isset($options['cache_wsdl']))
+    {
+      ini_set('soap.wsdl_cache_enabled', $options['cache_wsdl']);
+    }
+
     parent::__construct($endpoint, $options);
     $this->__parseAllStructs();
     $this->__parseAllMethods();
@@ -32,16 +37,21 @@ class SoapClient extends \SoapClient
     return $this->_default_value;
   }
 
-  public function __doRequest($request, $location, $action, $version='1')
+  public function __getRequestXmlForMethod($method)
   {
-    if (true === isset($this->_requestData))
-    {
-      return parent::__doRequest($this->_requestData, $location, $action, $version);
-    }
-    else
-    {
-      return '';
-    }
+    $request = $this->__getRequestObjectForMethod($method);
+    $this->__call($method, $request);
+
+    $dom = new \DOMDocument;
+    $dom->loadXML($this->__getLastRequest());
+    $dom->preserveWhiteSpace = false;
+    $dom->formatOutput = true;
+
+    $request_xml = $dom->saveXml();
+    $request_xml = str_replace($this->__get_default_value(), '', $request_xml);
+    $request_xml = preg_replace('/^<\?xml *version="1.0" *encoding="UTF-8" *\?>\n/i', '', $request_xml);
+
+    return $request_xml;
   }
 
   public function __getRequestObjectForMethod($methodName)
@@ -55,6 +65,41 @@ class SoapClient extends \SoapClient
     }
 
     return $object;
+  }
+
+  public function __getResponseXmlForMethod($method, $request_xml)
+  {
+    $response_object = $this->__getResponseObjectForMethod($method, $request_xml);
+
+    $dom = new \DOMDocument;
+    $dom->loadXML($this->__getLastResponse());
+    $dom->preserveWhiteSpace = false;
+    $dom->formatOutput = true;
+
+    $response_xml = $dom->saveXml();
+
+    return $response_xml;
+  }
+
+  public function __getResponseObjectForMethod($method, $request_xml)
+  {
+    $this->_requestXml = $request_xml;
+    $response_object = $this->$method($request_xml);
+    $this->_requestXml = null;
+
+    return $response_object;
+  }
+
+  public function __doRequest($request, $location, $action, $version='1')
+  {
+    if (true === isset($this->_requestXml))
+    {
+      return parent::__doRequest($this->_requestXml, $location, $action, $version);
+    }
+    else
+    {
+      return '';
+    }
   }
 
   protected function __doRecurseStructs($struct_name)

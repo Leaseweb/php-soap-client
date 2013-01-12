@@ -32,6 +32,7 @@ OPTIONS
     -u, --use-editor This option is only relevant when you use the `call`
                      action. If specified the editor in EDITOR environment
                      variable will be opened up.
+    -x, --xml        Output responses in raw xml.
 
 ACTIONS
 
@@ -48,7 +49,6 @@ ACTIONS
 METHOD
 
     Specify the method to call on the remote service
-
 ';
   const DEFAULT_TIMEOUT = 120;
 
@@ -84,6 +84,10 @@ METHOD
         'short' => 'u',
         'long'  => 'use-editor',
       ),
+      'xml' => array(
+        'short' => 'x',
+        'long'  => 'xml',
+      ),
       'cache' => array(
         'short' => 'c',
         'long' => 'cache',
@@ -94,56 +98,15 @@ METHOD
 
   protected function execute()
   {
+    if (true === $this->has_option('help'))
+    {
+      echo $this->get_help();
+      return 3;
+    }
+
     try
     {
-      if (true === $this->has_option('quiet'))
-      {
-        $this->log->set_level(Logger::ERROR);
-      }
-      elseif (true === $this->has_option('verbose'))
-      {
-        $this->log->set_level(Logger::DEBUG);
-      }
-
-      if (true === $this->has_option('help'))
-      {
-        echo $this->get_help();
-        return 3;
-      }
-
-      if (false === $this->has_option('endpoint'))
-      {
-        throw new \Exception('You must specify an endpoint');
-      }
-      else
-      {
-        if (true === $this->has_option('cache'))
-        {
-          $this->log->debug('Enabling caching of wsdl');
-          $cache = WSDL_CACHE_MEMORY;
-        }
-        else
-        {
-          $this->log->debug('Wsdls are not being cached.');
-          $cache = WSDL_CACHE_NONE;
-        }
-
-        $endpoint = $this->get_option('endpoint');
-        $this->log->info('Discovering wsdl at endpoint: %s', $endpoint);
-
-        $t1 = microtime(true);
-
-        ini_set('soap.wsdl_cache_enabled', $cache);
-        $this->remote_service = new SoapClient($endpoint, array(
-          'trace' => 1,
-          'exceptions' => true,
-          'connection_timeout' => self::DEFAULT_TIMEOUT,
-          'cache_wsdl' => $cache,
-        ));
-
-        $this->log->debug('Initializing soap service took %s seconds', microtime(true) - $t1);
-        unset($t1);
-      }
+      $this->process_options();
 
       switch ($this->get_argument(1))
       {
@@ -156,15 +119,15 @@ METHOD
           break;
 
         case 'call':
-          return $this->call_method();
+          return $this->call_method($this->get_argument(2));
           break;
 
         case 'request':
-          return $this->request_method();
+          return $this->request_method($this->get_argument(2));
           break;
 
         default:
-          $this->log->error('No valid action provided');
+          $this->log->error('No valid action provided. Run with option --help for a howto.');
           return 1;
           break;
       }
@@ -176,6 +139,51 @@ METHOD
     }
 
     return 0;
+  }
+
+  protected function process_options()
+  {
+    if (true === $this->has_option('quiet'))
+    {
+      $this->log->set_level(Logger::ERROR);
+    }
+    elseif (true === $this->has_option('verbose'))
+    {
+      $this->log->set_level(Logger::DEBUG);
+    }
+
+    if (false === $this->has_option('endpoint'))
+    {
+      throw new \Exception('You must specify an endpoint');
+    }
+
+    if (true === $this->has_option('cache'))
+    {
+      $this->log->debug('Enabling caching of wsdl');
+      $cache = WSDL_CACHE_MEMORY;
+    }
+    else
+    {
+      $this->log->debug('Wsdls are not being cached.');
+      $cache = WSDL_CACHE_NONE;
+    }
+
+    $endpoint = $this->get_option('endpoint');
+    $this->log->info('Discovering wsdl at endpoint: %s', $endpoint);
+
+    $t1 = microtime(true);
+
+    $this->remote_service = new SoapClient($endpoint, array(
+      'trace' => 1,
+      'exceptions' => true,
+      'connection_timeout' => self::DEFAULT_TIMEOUT,
+      'cache_wsdl' => $cache,
+    ));
+
+    $this->log->debug('Initializing soap service took %s seconds', microtime(true) - $t1);
+    unset($t1);
+
+    return true;
   }
 
   protected function list_methods()
@@ -194,15 +202,13 @@ METHOD
 
   protected function output_wsdl()
   {
-    echo file_get_contents($this->get_option('endpoint'));
+    echo file_get_contents($this->get_option('endpoint')) . PHP_EOL;
 
     return 0;
   }
 
-  protected function call_method()
+  protected function call_method($method = null)
   {
-    $method = $this->get_argument(2);
-
     if (false === isset($method))
     {
       throw new \Exception('You must specify a method name to call');
@@ -211,28 +217,36 @@ METHOD
     if ($this->has_option('use-editor'))
     {
       $editor = $_SERVER['EDITOR'];
-      $empty_request = $this->generate_xml_request($method);
+      $empty_request = $this->remote_service->__getRequestXmlForMethod($method);
 
       $this->log->info('Starting editor: ' . $editor);
-      $input_xml = $this->read_from_editor($editor, $empty_request);
+      $request_xml = $this->read_from_editor($editor, $empty_request);
     }
     else
     {
-      $input_xml = $this->read_from_stdin(true);
+      $request_xml = $this->read_from_stdin(true);
     }
 
-    if (null === $input_xml)
+    if (null === $request_xml)
     {
       $this->log->info('Create xml request below and finish with ctrl+d');
-      $input_xml = $this->read_from_stdin(false);
+      $request_xml = $this->read_from_stdin(false);
     }
 
     try
     {
       $this->log->info('Calling method %s on the remote', $method);
       $t1 = microtime(true);
-      $this->remote_service->_requestData = $input_xml;
-      $response = $this->remote_service->$method($input_xml);
+
+      if (true === $this->has_option('xml'))
+      {
+        $response = $this->remote_service->__getResponseXmlForMethod($method, $request_xml);
+      }
+      else
+      {
+        $response = $this->remote_service->__getResponseObjectForMethod($method, $request_xml);
+      }
+
       $this->log->info('Calling method took %s seconds', microtime(true) - $t1);
       unset($t1);
 
@@ -247,10 +261,8 @@ METHOD
     }
   }
 
-  protected function request_method()
+  protected function request_method($method = null)
   {
-    $method = $this->get_argument(2);
-
     if (false === isset($method))
     {
       throw new \Exception('You must specify a method name to call');
@@ -258,27 +270,10 @@ METHOD
     else
     {
       $this->log->info('Generating request for %s on remote', $method);
-      echo $this->generate_xml_request($method);
+      echo $this->remote_service->__getRequestXmlForMethod($method);
 
       return 0;
     }
-  }
-
-  protected function generate_xml_request($method)
-  {
-    $request = $this->remote_service->__getRequestObjectForMethod($method);
-    $this->remote_service->__call($method, $request);
-
-    $dom = new \DOMDocument;
-    $dom->loadXML($this->remote_service->__getLastRequest());
-    $dom->preserveWhiteSpace = false;
-    $dom->formatOutput = true;
-
-    $result = $dom->saveXml();
-    $result = str_replace($this->remote_service->__get_default_value(), '', $result);
-    $result = preg_replace('/^<\?xml *version="1.0" *encoding="UTF-8" *\?>\n/i', '', $result);
-
-    return $result;
   }
 
   protected function read_from_editor($editor, $contents=null)
