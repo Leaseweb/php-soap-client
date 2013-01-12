@@ -9,6 +9,47 @@ use Rocco\SoapExplorer\Soap\SoapClient;
 
 class SoapClientCommand extends Application
 {
+  const HELP = '
+php-cli-soap-client                                          version 1.2
+                                                           Nico Di Rocco
+
+A command line application to explore SOAP web services
+
+Usage: %s --endpoint wsdl [options] [action] [method]
+
+
+OPTIONS
+
+    -h, --help       Print this help message.
+    -q, --quiet      Surpress any kind of output. This option takes pre-
+                     cedence ofer the `-v` or `--verbose` option.
+    -v, --verbose    Output more verbose messages. Only works if `-q` or
+                     `--quiet` is not specified.
+    -e, --endpoint   Specify the wsdl to inspect. Alternatively you can
+                     set the environment variable SOAP_ENDPOINT.
+    -c, --cache      Flag to enable caching of the wsdl. By default this
+                     is disabled.
+    -u, --use-editor This option is only relevant when you use the `call`
+                     action. If specified the editor in EDITOR environment
+                     variable will be opened up.
+
+ACTIONS
+
+    The action to perform. If a action is omitted it defaults to `list`.
+    The following actions are supported:
+
+    list             Get a list of available methods to call on the remote.
+    wsdl             Outputs the raw wsdl in xml format.
+    request <method> Generate an xml formatted SOAP request for the given
+                     method and output to stdout.
+    call <method>    Call the remote service with the `method` specified
+                     and output the reponse to stdout.
+
+METHOD
+
+    Specify the method to call on the remote service
+
+';
   const DEFAULT_TIMEOUT = 120;
 
   protected $remote_service;
@@ -18,6 +59,8 @@ class SoapClientCommand extends Application
   {
     $this->log = new Logger();
 
+    $this->set_help(self::HELP);
+
     ini_set('default_socket_timeout', self::DEFAULT_TIMEOUT);
 
     $this->params = array(
@@ -26,6 +69,10 @@ class SoapClientCommand extends Application
         'long'    => 'quiet',
         'default' => false,
       ),
+      'verbose' => array(
+        'short'   => 'v',
+        'long'    => 'verbose',
+      ),
       'help' => array(
         'short' => 'h',
         'long'  => 'help',
@@ -33,6 +80,10 @@ class SoapClientCommand extends Application
       'endpoint' => array(
         'short' => 'e:',
         'long'  => 'endpoint:',
+      ),
+      'use-editor' => array(
+        'short' => 'u',
+        'long'  => 'use-editor',
       ),
       'cache' => array(
         'short' => 'c',
@@ -49,6 +100,10 @@ class SoapClientCommand extends Application
       if (true === $this->has_option('quiet'))
       {
         $this->log->set_level(Logger::ERROR);
+      }
+      elseif (true === $this->has_option('verbose'))
+      {
+        $this->log->set_level(Logger::DEBUG);
       }
 
       if (true === $this->has_option('help'))
@@ -87,7 +142,7 @@ class SoapClientCommand extends Application
           'cache_wsdl' => $cache,
         ));
 
-        $this->log->info('Initializing soap service took %s seconds', microtime(true) - $t1);
+        $this->log->debug('Initializing soap service took %s seconds', microtime(true) - $t1);
         unset($t1);
       }
 
@@ -95,6 +150,10 @@ class SoapClientCommand extends Application
       {
         case 'list':
           return $this->list_methods();
+          break;
+
+        case 'wsdl':
+          return $this->output_wsdl();
           break;
 
         case 'call':
@@ -134,6 +193,13 @@ class SoapClientCommand extends Application
     return 0;
   }
 
+  protected function output_wsdl()
+  {
+    echo file_get_contents($this->get_option('endpoint'));
+
+    return 0;
+  }
+
   protected function call_method()
   {
     $method = $this->get_argument(2);
@@ -142,34 +208,43 @@ class SoapClientCommand extends Application
     {
       throw new \Exception('You must specify a method name to call');
     }
+
+    if ($this->has_option('use-editor'))
+    {
+      $editor = $_SERVER['EDITOR'];
+      $empty_request = $this->generate_xml_request($method);
+
+      $this->log->info('Starting editor: ' . $editor);
+      $input_xml = $this->read_from_editor($editor, $empty_request);
+    }
     else
     {
       $input_xml = $this->read_from_stdin(true);
+    }
 
-      if (null === $input_xml)
-      {
-        $this->log->info('No xml read from stdin. Create xml below and finish with ctrl+d');
-        $input_xml = $this->read_from_stdin(false);
-      }
+    if (null === $input_xml)
+    {
+      $this->log->info('Create xml request below and finish with ctrl+d');
+      $input_xml = $this->read_from_stdin(false);
+    }
 
-      try
-      {
-        $this->log->info('Calling method %s on the remote', $method);
-        $t1 = microtime(true);
-        $this->remote_service->_requestData = $input_xml;
-        $response = $this->remote_service->$method($input_xml);
-        $this->log->info('Calling method took %s seconds', microtime(true) - $t1);
-        unset($t1);
+    try
+    {
+      $this->log->info('Calling method %s on the remote', $method);
+      $t1 = microtime(true);
+      $this->remote_service->_requestData = $input_xml;
+      $response = $this->remote_service->$method($input_xml);
+      $this->log->info('Calling method took %s seconds', microtime(true) - $t1);
+      unset($t1);
 
-        print_r($response);
+      print_r($response);
 
-        return 0;
-      }
-      catch (Exception $e)
-      {
-        $this->log->error(sprintf('Error while calling %s on %s', $method, $endpoint));
-        throw $e;
-      }
+      return 0;
+    }
+    catch (Exception $e)
+    {
+      $this->log->error(sprintf('Error while calling %s on %s', $method, $endpoint));
+      throw $e;
     }
   }
 
@@ -184,23 +259,58 @@ class SoapClientCommand extends Application
     else
     {
       $this->log->info('Generating request for %s on remote', $method);
-
-      $request = $this->remote_service->__getRequestObjectForMethod($method);
-      $this->remote_service->__call($method, $request);
-
-      $dom = new \DOMDocument;
-      $dom->loadXML($this->remote_service->__getLastRequest());
-      $dom->preserveWhiteSpace = false;
-      $dom->formatOutput = true;
-
-      $result = $dom->saveXml();
-      $result = str_replace($this->remote_service->__get_default_value(), '', $result);
-      $result = preg_replace('/^<\?xml *version="1.0" *encoding="UTF-8" *\?>\n/i', '', $result);
-
-      echo $result;
+      echo $this->generate_xml_request($method);
 
       return 0;
     }
   }
 
+  protected function generate_xml_request($method)
+  {
+    $request = $this->remote_service->__getRequestObjectForMethod($method);
+    $this->remote_service->__call($method, $request);
+
+    $dom = new \DOMDocument;
+    $dom->loadXML($this->remote_service->__getLastRequest());
+    $dom->preserveWhiteSpace = false;
+    $dom->formatOutput = true;
+
+    $result = $dom->saveXml();
+    $result = str_replace($this->remote_service->__get_default_value(), '', $result);
+    $result = preg_replace('/^<\?xml *version="1.0" *encoding="UTF-8" *\?>\n/i', '', $result);
+
+    return $result;
+  }
+
+  protected function read_from_editor($editor, $contents=null)
+  {
+    $temp_file = tmpfile();
+    $temp_file_info = stream_get_meta_data($temp_file);
+
+    if (false === is_null($contents))
+    {
+      fwrite($temp_file, $contents);
+    }
+
+    $temp_filename = $temp_file_info['uri'];
+
+    $this->log->debug('Start editing file ' . $temp_filename);
+
+    system("$editor $temp_filename > `tty`");
+
+    fseek($temp_file, 0);
+    $input_xml = fread($temp_file, 1024);
+    fclose($temp_file);
+
+    if (0 === strcmp((string)$contents, $input_xml))
+    {
+      $this->log->debug('File wasn\'t modified');
+    }
+    else
+    {
+      $this->log->debug('File was modified using the editor');
+    }
+
+    return $input_xml;
+  }
 }
