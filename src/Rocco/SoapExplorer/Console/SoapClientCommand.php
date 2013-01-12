@@ -26,6 +26,10 @@ class SoapClientCommand extends Application
         'long'    => 'quiet',
         'default' => false,
       ),
+      'debug' => array(
+        'short'   => 'd',
+        'long'    => 'debug',
+      ),
       'help' => array(
         'short' => 'h',
         'long'  => 'help',
@@ -49,6 +53,10 @@ class SoapClientCommand extends Application
       if (true === $this->has_option('quiet'))
       {
         $this->log->set_level(Logger::ERROR);
+      }
+      elseif (true === $this->has_option('debug'))
+      {
+        $this->log->set_level(Logger::DEBUG);
       }
 
       if (true === $this->has_option('help'))
@@ -87,7 +95,7 @@ class SoapClientCommand extends Application
           'cache_wsdl' => $cache,
         ));
 
-        $this->log->info('Initializing soap service took %s seconds', microtime(true) - $t1);
+        $this->log->debug('Initializing soap service took %s seconds', microtime(true) - $t1);
         unset($t1);
       }
 
