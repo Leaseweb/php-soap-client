@@ -7,7 +7,7 @@ A command line application to explore SOAP services
 Usage
 =====
 
-    php-cli-soap-client                                          version 1.2
+    php-cli-soap-client                                          version 1.3
                                                                Nico Di Rocco
 
     A command line application to explore SOAP web services
@@ -29,6 +29,7 @@ Usage
         -u, --use-editor This option is only relevant when you use the `call`
                          action. If specified the editor in EDITOR environment
                          variable will be opened up.
+        -x, --xml        Output responses in raw xml.
 
     ACTIONS
 
