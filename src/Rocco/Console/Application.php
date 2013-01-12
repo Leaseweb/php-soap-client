@@ -152,19 +152,9 @@ class Application
     return $this->arguments;
   }
 
-  public function set_params($params)
-  {
-    $this->params = $params;
-  }
-
   public function get_help()
   {
     return sprintf($this->help_text, $this->name);
-  }
-
-  public function set_help($help_text)
-  {
-    $this->help_text = $help_text;
   }
 
   protected function read_from_stdin($non_blocking = false)

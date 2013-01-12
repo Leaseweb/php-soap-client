@@ -58,8 +58,7 @@ METHOD
   protected function configure()
   {
     $this->log = new Logger();
-
-    $this->set_help(self::HELP);
+    $this->help_text = self::HELP;
 
     ini_set('default_socket_timeout', self::DEFAULT_TIMEOUT);
 
