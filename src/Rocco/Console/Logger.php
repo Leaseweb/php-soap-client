@@ -18,6 +18,8 @@ class Logger
     3 => 'ERROR',
   );
 
+  protected $_left_padding = 8;
+
   public function __construct($level = 1)
   {
     $this->set_level($level);
@@ -62,7 +64,8 @@ class Logger
   {
     if ($level >= $this->level)
     {
-      file_put_contents($stream, $this->_get_label_for($level) . call_user_func_array('sprintf', $args) . PHP_EOL);
+      file_put_contents($stream, 
+                        $this->_get_label_for($level) . call_user_func_array('sprintf', $args) . PHP_EOL);
     }
   }
 
@@ -70,7 +73,7 @@ class Logger
   {
     if (array_key_exists($level, $this->labels))
     {
-      return '[' . $this->labels[$level] . '] ';
+      return str_pad('[' . $this->labels[$level] . '] ', $this->_left_padding);
     }
     else
     {
