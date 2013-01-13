@@ -121,10 +121,6 @@ METHOD
 
       switch ($this->get_argument(1))
       {
-        case 'list':
-          return $this->list_methods();
-          break;
-
         case 'wsdl':
           return $this->output_wsdl();
           break;
@@ -137,9 +133,9 @@ METHOD
           return $this->request_method($this->get_argument(2));
           break;
 
+        case 'list':
         default:
-          $this->log->error('No valid action provided. Run with option --help for a howto.');
-          return 1;
+          return $this->list_methods();
           break;
       }
     }
