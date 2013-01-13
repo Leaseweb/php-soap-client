@@ -156,7 +156,7 @@ METHOD
   {
     if (true === $this->has_option('quiet'))
     {
-      $this->log->set_level(Logger::ERROR);
+      $this->log->set_level(Logger::ERROR+1);
     }
     elseif (true === $this->has_option('verbose'))
     {
