@@ -1,13 +1,13 @@
 build: clean
 	php create-phar.php
-	chmod u+x build/soap_client.phar
+	chmod +x build/soap_client.phar
 clean: prepare
 	rm -rf build/*
 prepare:
 	if [ ! -d build ]; then mkdir build; fi
 install:
 	if [ ! -d /usr/local/bin ]; then mkdir /usr/local/bin; fi
-	mv -f build/soap_client.phar /usr/local/bin/soap_client
+	cp -f build/soap_client.phar /usr/local/bin/soap_client
 remove:
 	rm -f /usr/local/bin/soap_client
 help:
