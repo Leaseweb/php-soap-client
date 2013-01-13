@@ -303,8 +303,7 @@ METHOD
 
     system("$editor $temp_filename > `tty`");
 
-    fseek($temp_file, 0);
-    $input_xml = fread($temp_file, 1024);
+    $input_xml = $this->read_from_file($temp_filename);
     fclose($temp_file);
 
     if (0 === strcmp((string)$contents, $input_xml))
@@ -317,5 +316,14 @@ METHOD
     }
 
     return $input_xml;
+  }
+
+  protected function read_from_file($filename, $length=2048)
+  {
+    $file = fopen($filename, 'r');
+    $contents = fread($file, $length);
+    fclose($blaat);
+
+    return $contents;
   }
 }
