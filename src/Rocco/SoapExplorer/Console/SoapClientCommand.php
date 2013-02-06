@@ -10,7 +10,7 @@ use Rocco\SoapExplorer\Soap\SoapClient;
 class SoapClientCommand extends Application
 {
   const HELP = '
-php-cli-soap-client                                          version 1.3
+php-cli-soap-client                                        version 1.3.2
                                                            Nico Di Rocco
 
 A command line application to explore SOAP web services
@@ -121,10 +121,6 @@ METHOD
 
       switch ($this->get_argument(1))
       {
-        case 'list':
-          return $this->list_methods();
-          break;
-
         case 'wsdl':
           return $this->output_wsdl();
           break;
@@ -137,9 +133,9 @@ METHOD
           return $this->request_method($this->get_argument(2));
           break;
 
+        case 'list':
         default:
-          $this->log->error('No valid action provided. Run with option --help for a howto.');
-          return 1;
+          return $this->list_methods();
           break;
       }
     }
@@ -156,7 +152,7 @@ METHOD
   {
     if (true === $this->has_option('quiet'))
     {
-      $this->log->set_level(Logger::ERROR);
+      $this->log->set_level(Logger::ERROR+1);
     }
     elseif (true === $this->has_option('verbose'))
     {
@@ -303,8 +299,7 @@ METHOD
 
     system("$editor $temp_filename > `tty`");
 
-    fseek($temp_file, 0);
-    $input_xml = fread($temp_file, 1024);
+    $input_xml = $this->read_from_file($temp_filename);
     fclose($temp_file);
 
     if (0 === strcmp((string)$contents, $input_xml))
@@ -317,5 +312,14 @@ METHOD
     }
 
     return $input_xml;
+  }
+
+  protected function read_from_file($filename, $length=2048)
+  {
+    $file = fopen($filename, 'r');
+    $contents = fread($file, $length);
+    fclose($blaat);
+
+    return $contents;
   }
 }
