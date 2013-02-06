@@ -10,7 +10,7 @@ use Rocco\SoapExplorer\Soap\SoapClient;
 class SoapClientCommand extends Application
 {
   const HELP = '
-php-cli-soap-client                                          version 1.3
+php-cli-soap-client                                        version 1.3.2
                                                            Nico Di Rocco
 
 A command line application to explore SOAP web services
