@@ -62,7 +62,7 @@ Usage
 Installation
 ============
 
-To install `soap_client` in `/usr/local/bin` you can checkout the source code and build from there:
+To install `soap_client` in `/usr/bin` you can checkout the source code and build from there:
 
     git clone https://github.com/nrocco/php-soap-client.git
     cd php-soap-client
