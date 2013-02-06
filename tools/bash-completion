@@ -14,9 +14,10 @@ _soap_client_completions()
                         # opts="AddOrder MarkServersReadyToProcess UpdateServerId GetOrderStatus SetInstallationStatus"
                         # opts="$(${soap_client} -q list 2> /dev/null | tr '\n' ' ')"
                         # opts="$(${soap_client} -q list 2> /dev/null)"
+                        opts="$(${soap_client} -c -q list)"
                         ;;
                 *)
-                        opts="--help --cache --endpoint --quiet -e -q -h -c list wsdl call request"
+                        opts="--help --cache --endpoint --quiet --xml --use-editor --verbose -e -q -h -c -x -u -v list wsdl call request"
                         ;;
         esac
                
