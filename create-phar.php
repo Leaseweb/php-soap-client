@@ -4,6 +4,7 @@
 $PHAR_NAME = 'soap_client';
 
 $SRC_DIR   = __DIR__ . DIRECTORY_SEPARATOR . 'src';
+$VENDOR_DIR= __DIR__ . DIRECTORY_SEPARATOR . 'vendor';
 $BUILD_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'build';
 
 $PHAR_FILE = $BUILD_DIR . DIRECTORY_SEPARATOR . $PHAR_NAME . '.phar';
@@ -12,6 +13,15 @@ $phar = new Phar($PHAR_FILE, 0, $PHAR_NAME);
 // $phar->buildFromDirectory($SRC_DIR, '/\.php$/');
 
 $oDir = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($SRC_DIR), RecursiveIteratorIterator::SELF_FIRST);
+foreach ($oDir as $sFile)
+{
+  if (preg_match('/\\.php$/i', $sFile))
+  {
+    $phar->addFromString(substr($sFile, strlen($SRC_DIR)+1), php_strip_whitespace($sFile));
+  }
+}
+
+$oDir = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($VENDOR_DIR), RecursiveIteratorIterator::SELF_FIRST);
 foreach ($oDir as $sFile)
 {
   if (preg_match('/\\.php$/i', $sFile))
