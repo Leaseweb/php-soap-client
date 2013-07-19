@@ -1,10 +1,10 @@
 <?php
 
-namespace Rocco\PhpSoapClient\Command;
+namespace PhpSoapClient\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Rocco\PhpSoapClient\Command\Base\SoapCommand;
+use PhpSoapClient\Command\Base\SoapCommand;
 
 
 class CallMethodCommand extends SoapCommand

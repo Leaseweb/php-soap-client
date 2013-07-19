@@ -1,6 +1,6 @@
 <?php
 
-namespace Rocco\PhpSoapClient\Client;
+namespace PhpSoapClient\Client;
 
 
 class SoapClient extends \SoapClient

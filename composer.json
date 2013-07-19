@@ -15,6 +15,6 @@
         "symfony/process": "v2.3.2"
     },
     "autoload": {
-        "psr-0": {"Rocco\\": "src/"}
+        "psr-0": {"": "src/"}
     }
 }
