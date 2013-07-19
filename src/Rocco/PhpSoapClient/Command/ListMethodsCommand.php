@@ -13,18 +13,16 @@ class ListMethodsCommand extends SoapCommand
   {
     parent::configure();
 
-    $this->setName('listt');
+    $this->setName('list-methods');
     $this->setDescription('Get a list of available methods to call on the remote.');
   }
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
     $endpoint = $input->getOption('endpoint');
-    $method = $input->getArgument('method');
-
     $service = $this->getSoapClient($endpoint);
 
-    $output->writeln('Listing all available methods on the remote.');
+    $this->debug($output, 'Listing all available methods on the remote.');
 
     // echo implode(' ', array_keys($this->remote_service->__getMethods()));
 
@@ -32,5 +30,7 @@ class ListMethodsCommand extends SoapCommand
     {
       echo $method.PHP_EOL;
     }
+
+    $this->debug($output, 'Done.');
   }
 }
