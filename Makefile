@@ -1,16 +1,13 @@
 build: clean
-	php create-phar.php
-	chmod +x build/soap_client.phar
+	bin/compile
+	chmod +x soap_client.phar
 
 .PHONY: tags
 tags:
 	ctags -R --PHP-kinds=+cf --exclude=build --exclude=*.phar
 
-clean: prepare
-	rm -rf build/*
-
-prepare:
-	if [ ! -d build ]; then mkdir build; fi
+clean:
+	rm -f soap_client.phar
 
 install:
 	if [ ! -d /usr/local/bin ]; then mkdir /usr/local/bin; fi

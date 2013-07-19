@@ -26,6 +26,7 @@ class GetMethodRequestXmlCommand extends SoapCommand
   protected function execute(InputInterface $input, OutputInterface $output)
   {
     $endpoint = $input->getOption('endpoint');
+    $cache = $input->getOption('cache');
     $method = $input->getArgument('method');
 
     if (false === isset($method))
@@ -36,7 +37,7 @@ class GetMethodRequestXmlCommand extends SoapCommand
     {
       $this->debug($output, sprintf('Generating request for %s on remote', $method));
 
-      $service = $this->getSoapClient($endpoint);
+      $service = $this->getSoapClient($endpoint, $cache);
 
       echo $service->__getRequestXmlForMethod($method);
     }
