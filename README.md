@@ -7,63 +7,47 @@ A command line application to explore SOAP services
 Usage
 =====
 
-    php-cli-soap-client                                        version 1.3.2
-                                                               Nico Di Rocco
+    php-soap-client version 2.0.0
 
-    A command line application to explore SOAP web services
+    Usage:
+      [options] command [arguments]
 
-    Usage: src/cli.php --endpoint wsdl [options] [action] [method]
+    Options:
+      --help           -h Display this help message.
+      --quiet          -q Do not output any message.
+      --verbose        -v|vv|vvv Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+      --version        -V Display this application version.
+      --ansi              Force ANSI output.
+      --no-ansi           Disable ANSI output.
+      --no-interaction -n Do not ask any interactive question.
 
+    Available commands:
+      call           Call the remote service with the `method` specified and output the reponse to stdout.
+      help           Displays help for a command
+      list           Lists commands
+      list-methods   Get a list of available methods to call on the remote.
+      request        Generate an xml formatted SOAP request for the given method and output to stdout.
+      wsdl           Get the WSDL of a soap service.
 
-    OPTIONS
-
-        All options below can also be set by specifying environment variables.
-        Environment variables are named like the long option's name in uppercase
-        and prepending it with SOAP_
-
-        So --endpoint http://example.com/soap.wsdl can also be set like this:
-
-          SOAP_ENDPOINT='http://example.com/soap.wsdl'
-
-
-        -h, --help       Print this help message.
-        -q, --quiet      Surpress any kind of output. This option takes pre-
-                         cedence over the `-v` or `--verbose` option.
-        -v, --verbose    Output more verbose messages. If `-q` or `--quiet`
-                         is specified setting this option has no effect.
-        -e, --endpoint   Specify the url to the wsdl of the SOAP webservice
-                         to inspect. Alternatively you can
-        -c, --cache      Flag to enable caching of the wsdl. By default this
-                         is disabled.
-        -u, --use-editor This option is only relevant when you use the `call`
-                         action. If specified the editor in EDITOR environment
-                         variable will be opened up.
-        -x, --xml        Output responses in raw xml.
-
-
-    ACTIONS
-
-        The action to perform. If a action is omitted it defaults to `list`.
-        The following actions are supported:
-
-        list             Get a list of available methods to call on the remote.
-        wsdl             Outputs the raw wsdl in xml format.
-        request <method> Generate an xml formatted SOAP request for the given
-                         method and output to stdout.
-        call <method>    Call the remote service with the `method` specified
-                         and output the reponse to stdout.
-
-
-    METHOD
-
-        Specify the method to call on the remote service
 
 
 Installation
 ============
+
+*Easy method (no sudo):*
+
+Download the latest `soap_client.phar` and start using it immediatly:
+
+    wget http://nrocco.github.io/php-soap-client/soap_client.phar
+    chmod +x soap_client.phar
+    soap_client.phar --help
+
+
+*Difficult method (needs sudo):*
 
 To install `soap_client` in `/usr/bin` you can checkout the source code and build from there:
 
     git clone https://github.com/nrocco/php-soap-client.git
     cd php-soap-client
     sudo make install
+    soap_client --help
