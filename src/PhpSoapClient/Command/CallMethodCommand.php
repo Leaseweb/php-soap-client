@@ -8,6 +8,7 @@ use PhpSoapClient\Command\Base\SoapCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use PhpSoapClient\Helper\EditorHelper;
+use PhpSoapClient\Helper\StdinHelper;
 
 
 class CallMethodCommand extends SoapCommand
@@ -54,24 +55,17 @@ class CallMethodCommand extends SoapCommand
 
     if (true === $input->getOption('use-editor'))
     {
-      $helper = new EditorHelper();
+      $editor = new EditorHelper();
 
       $this->logger->debug('Getting request xml from the server');
       $empty_request = $service->__getRequestXmlForMethod($method);
 
-      $this->logger->debug('Starting editor: ' . $helper->getEditor());
-      $result = $helper->open($empty_request);
+      $this->logger->debug('Starting editor: ' . $editor->getEditor());
+      $request_xml = $editor->open_and_read($empty_request);
 
-      if (0 === $result)
-      {
-        $request_xml = $helper->read();
-      }
-      else
-      {
-        throw \Exception('Something went wrong with tmp file');
-      }
+      unset($editor);
 
-      if (0 === strcmp((string)$request_xml, $request_xml))
+      if (0 === strcmp((string)$request_xml, $empty_request))
       {
         $this->logger->debug('File wasn\'t modified');
       }
@@ -82,16 +76,22 @@ class CallMethodCommand extends SoapCommand
     }
     else
     {
-      $request_xml = $this->read_from_stdin(true);
+      $stdin = new StdinHelper();
+      $stdin->setBlocking(false);
+      $request_xml = $stdin->read();
+
+      if (null === $request_xml)
+      {
+        $stdin->setBlocking(true);
+
+        $this->logger->info('Create xml request below and finish with <info>ctrl+d</info>:');
+        $request_xml = $stdin->read();
+      }
+
+      $stdin->destroy();
     }
 
-    if (null === $request_xml)
-    {
-      $this->logger->debug('Create xml request below and finish with ctrl+d');
-      $request_xml = $this->read_from_stdin(false);
-    }
-
-    $this->logger->debug("Calling method $method on the remote");
+    $this->logger->debug('Calling method %s on the remote', $method);
     $t1 = microtime(true);
 
     if (true === $input->getOption('xml'))
@@ -107,7 +107,5 @@ class CallMethodCommand extends SoapCommand
     unset($t1);
 
     print_r($response);
-
-    return 0;
   }
 }
