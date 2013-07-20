@@ -1,6 +1,7 @@
 <?php
 
-namespace Rocco\SoapExplorer\Soap;
+namespace PhpSoapClient\Client;
+
 
 class SoapClient extends \SoapClient
 {
@@ -90,11 +91,11 @@ class SoapClient extends \SoapClient
     return $response_object;
   }
 
-  public function __doRequest($request, $location, $action, $version='1')
+  public function __doRequest ($request, $location, $action, $version, $one_way = 0)
   {
     if (true === isset($this->_requestXml))
     {
-      return parent::__doRequest($this->_requestXml, $location, $action, $version);
+      return parent::__doRequest($this->_requestXml, $location, $action, $version, $one_way);
     }
     else
     {
