@@ -56,10 +56,10 @@ class CallMethodCommand extends SoapCommand
     {
       $helper = new EditorHelper();
 
-      $this->debug($output, 'Getting request xml from the server');
+      $this->logger->debug('Getting request xml from the server');
       $empty_request = $service->__getRequestXmlForMethod($method);
 
-      $this->debug($output, 'Starting editor: ' . $helper->getEditor());
+      $this->logger->debug('Starting editor: ' . $helper->getEditor());
       $result = $helper->open($empty_request);
 
       if (0 === $result)
@@ -73,11 +73,11 @@ class CallMethodCommand extends SoapCommand
 
       if (0 === strcmp((string)$request_xml, $request_xml))
       {
-        $this->debug($output, 'File wasn\'t modified');
+        $this->logger->debug('File wasn\'t modified');
       }
       else
       {
-        $this->debug($output, 'File was modified using the editor');
+        $this->logger->debug('File was modified using the editor');
       }
     }
     else
@@ -87,11 +87,11 @@ class CallMethodCommand extends SoapCommand
 
     if (null === $request_xml)
     {
-      $this->debug($output, 'Create xml request below and finish with ctrl+d');
+      $this->logger->debug('Create xml request below and finish with ctrl+d');
       $request_xml = $this->read_from_stdin(false);
     }
 
-    $this->debug($output, "Calling method $method on the remote");
+    $this->logger->debug("Calling method $method on the remote");
     $t1 = microtime(true);
 
     if (true === $input->getOption('xml'))
@@ -103,7 +103,7 @@ class CallMethodCommand extends SoapCommand
       $response = $service->__getResponseObjectForMethod($method, $request_xml);
     }
 
-    $this->debug($output, sprintf('Calling method took %s seconds', microtime(true) - $t1));
+    $this->logger->debug('Calling method took %s seconds', microtime(true) - $t1);
     unset($t1);
 
     print_r($response);

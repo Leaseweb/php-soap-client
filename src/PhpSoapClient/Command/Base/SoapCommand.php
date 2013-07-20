@@ -2,14 +2,18 @@
 
 namespace PhpSoapClient\Command\Base;
 
+use PhpSoapClient\Client\SoapClient;
+use PhpSoapClient\Helper\LoggerHelper;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use PhpSoapClient\Client\SoapClient;
 
 
 class SoapCommand extends Command
 {
+  protected $logger;
+
   protected function configure()
   {
     parent::configure();
@@ -29,12 +33,9 @@ class SoapCommand extends Command
     );
   }
 
-  protected function debug($output, $message)
+  protected function initialize(InputInterface $input, OutputInterface $output)
   {
-    if (OutputInterface::VERBOSITY_VERBOSE <= $output->getVerbosity())
-    {
-      $output->writeln($message);
-    }
+    $this->logger = new LoggerHelper($output);
   }
 
   protected function getSoapClient($endpoint, $cache=false, $timeout=120)
@@ -46,16 +47,17 @@ class SoapCommand extends Command
 
     if (true === $cache)
     {
-      // $this->log->debug('Enabling caching of wsdl');
+      $this->logger->debug('Enabling caching of wsdl');
       $cache = WSDL_CACHE_MEMORY;
     }
     else
     {
-      // $this->log->debug('Wsdls are not being cached.');
+      $this->logger->debug('Wsdls are not being cached.');
       $cache = WSDL_CACHE_NONE;
     }
 
     ini_set('default_socket_timeout', $timeout);
+    $this->logger->debug('Set socket timeout to %s seconds.', $timeout);
 
     return new SoapClient($endpoint, array(
       'trace' => 1,

@@ -22,7 +22,7 @@ class ListMethodsCommand extends SoapCommand
     $endpoint = $input->getOption('endpoint');
     $service = $this->getSoapClient($endpoint);
 
-    $this->debug($output, 'Listing all available methods on the remote.');
+    $this->logger->debug('Listing all available methods on the remote.');
 
     // echo implode(' ', array_keys($this->remote_service->__getMethods()));
 
@@ -31,6 +31,6 @@ class ListMethodsCommand extends SoapCommand
       echo $method.PHP_EOL;
     }
 
-    $this->debug($output, 'Done.');
+    $this->logger->debug('Done.');
   }
 }

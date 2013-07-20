@@ -35,13 +35,13 @@ class GetMethodRequestXmlCommand extends SoapCommand
     }
     else
     {
-      $this->debug($output, sprintf('Generating request for %s on remote', $method));
+      $this->logger->debug('Generating request for %s on remote', $method);
 
       $service = $this->getSoapClient($endpoint, $cache);
 
       echo $service->__getRequestXmlForMethod($method);
     }
 
-    $this->debug($output, 'Done.');
+    $this->logger->debug('Done.');
   }
 }
