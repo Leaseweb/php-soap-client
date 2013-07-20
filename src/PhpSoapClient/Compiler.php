@@ -3,7 +3,6 @@
 namespace PhpSoapClient;
 
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Process\Process;
 
 class Compiler
 {
@@ -35,7 +34,7 @@ class Compiler
             ->ignoreVCS(true)
             ->name('*.php')
             ->exclude('Tests')
-            ->in(__DIR__.'/../../vendor/symfony/')
+            ->in(__DIR__.'/../../vendor/symfony/console/')
         ;
 
         foreach ($finder as $file) {
