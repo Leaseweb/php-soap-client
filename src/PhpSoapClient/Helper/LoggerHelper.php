@@ -3,31 +3,12 @@
 namespace PhpSoapClient\Helper;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Helper\HelperInterface;
 
 
 
-class LoggerHelper implements HelperInterface
+class LoggerHelper
 {
-  protected $helperset;
-
   protected $_ouput;
-
-  public function getName()
-  {
-    return 'logger';
-  }
-
-  public function setHelperSet(HelperSet $helperSet = null)
-  {
-    $this->helperset = $helperset;
-  }
-
-  public function getHelperSet()
-  {
-    return $this->helperset;
-  }
 
   public function __construct(OutputInterface $output)
   {

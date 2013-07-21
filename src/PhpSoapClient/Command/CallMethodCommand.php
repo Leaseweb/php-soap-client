@@ -27,7 +27,7 @@ class CallMethodCommand extends SoapCommand
     );
 
     $this->addOption(
-      'use-editor',
+      'editor',
       null,
       InputOption::VALUE_NONE,
       'Open the request xml in your favorite $EDITOR before sending to the server.'
@@ -43,7 +43,7 @@ class CallMethodCommand extends SoapCommand
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    $endpoint = $input->getOption('endpoint');
+    $endpoint = $this->getEndpoint($input);
     $method = $input->getArgument('method');
 
     if (false === isset($method))
@@ -53,7 +53,7 @@ class CallMethodCommand extends SoapCommand
 
     $service = $this->getSoapClient($endpoint, $input->getOption('cache'));
 
-    if (true === $input->getOption('use-editor'))
+    if (true === $input->getOption('editor'))
     {
       $editor = new EditorHelper();
 
@@ -84,6 +84,7 @@ class CallMethodCommand extends SoapCommand
         $this->logger->info('Create xml request below and finish with <info>ctrl+d</info>:');
         $request_xml = $stdin->read(true);
       }
+      unset($stdin);
     }
 
     $this->logger->debug('Calling method %s on the remote', $method);

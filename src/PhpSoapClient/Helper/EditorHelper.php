@@ -3,40 +3,16 @@
 namespace PhpSoapClient\Helper;
 
 use PhpSoapClient\File\TmpFile;
-use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Helper\HelperInterface;
 
 
 
-class EditorHelper implements HelperInterface
+class EditorHelper
 {
-  protected $helperset;
-
   protected $editor;
 
   public function __construct($editor=null)
   {
-    if (false === isset($editor))
-    {
-      $editor = $_SERVER['EDITOR'];
-    }
-
-    $this->editor = $editor;
-  }
-
-  public function getName()
-  {
-    return 'editor';
-  }
-
-  public function setHelperSet(HelperSet $helperSet = null)
-  {
-    $this->helperset = $helperset;
-  }
-
-  public function getHelperSet()
-  {
-    return $this->helperset;
+    $this->editor = isset($editor) ? $editor : $_SERVER['EDITOR'];
   }
 
   public function getEditor()

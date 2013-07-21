@@ -25,7 +25,7 @@ class GetMethodRequestXmlCommand extends SoapCommand
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    $endpoint = $input->getOption('endpoint');
+    $endpoint = $this->getEndpoint($input);
     $cache = $input->getOption('cache');
     $method = $input->getArgument('method');
 

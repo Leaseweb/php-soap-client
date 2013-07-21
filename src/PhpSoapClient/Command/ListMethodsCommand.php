@@ -19,7 +19,7 @@ class ListMethodsCommand extends SoapCommand
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    $endpoint = $input->getOption('endpoint');
+    $endpoint = $this->getEndpoint($input);
     $service = $this->getSoapClient($endpoint);
 
     $this->logger->debug('Listing all available methods on the remote.');

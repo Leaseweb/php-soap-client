@@ -38,6 +38,24 @@ class SoapCommand extends Command
     $this->logger = new LoggerHelper($output);
   }
 
+  protected function getEndpoint(InputInterface $input)
+  {
+    $endpoint = $input->getOption('endpoint');
+
+    if (false === is_null($endpoint))
+    {
+      return $endpoint;
+    }
+    elseif (true === array_key_exists('SOAPCLIENT_ENDPOINT', $_SERVER))
+    {
+      return $_SERVER['SOAPCLIENT_ENDPOINT'];
+    }
+    else
+    {
+      throw new \Exception('You must specify an endpoint.');
+    }
+  }
+
   protected function getSoapClient($endpoint, $cache=false, $timeout=120)
   {
     if (empty($endpoint))

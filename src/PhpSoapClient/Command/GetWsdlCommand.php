@@ -19,7 +19,7 @@ class GetWsdlCommand extends SoapCommand
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    $endpoint = $input->getOption('endpoint');
+    $endpoint = $this->getEndpoint($input);
 
     if (false === isset($endpoint))
     {
