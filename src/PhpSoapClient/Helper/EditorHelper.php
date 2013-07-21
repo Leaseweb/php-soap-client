@@ -4,13 +4,25 @@ namespace PhpSoapClient\Helper;
 
 use PhpSoapClient\File\TmpFile;
 use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\HelperInterface;
+
+
 
 class EditorHelper implements HelperInterface
 {
   protected $helperset;
 
   protected $editor;
-  protected $tmpfile;
+
+  public function __construct($editor=null)
+  {
+    if (false === isset($editor))
+    {
+      $editor = $_SERVER['EDITOR'];
+    }
+
+    $this->editor = $editor;
+  }
 
   public function getName()
   {
@@ -27,16 +39,6 @@ class EditorHelper implements HelperInterface
     return $this->helperset;
   }
 
-  public function __construct($editor=null)
-  {
-    if (false === isset($editor))
-    {
-      $editor = $_SERVER['EDITOR'];
-    }
-
-    $this->editor = $editor;
-  }
-
   public function getEditor()
   {
     return $this->editor;
@@ -49,17 +51,14 @@ class EditorHelper implements HelperInterface
 
   public function open_and_read($contents=null, $length = 2048)
   {
-    if (false === isset($this->tmpfile))
-    {
-      $this->tmpfile = new TmpFile();
-    }
+    $tmpfile = new TmpFile();
 
     if (false === is_null($contents))
     {
-      $this->tmpfile->write($contents);
+      $tmpfile->write($contents);
     }
 
-    $command = sprintf('%s %s > `tty`', $this->editor, $this->tmpfile->filename());
+    $command = sprintf('%s %s > `tty`', $this->editor, $tmpfile->filename());
     system($command, $retval);
 
     if (0 !== $retval)
@@ -67,10 +66,9 @@ class EditorHelper implements HelperInterface
       throw \Exception('Something went wrong with tmp file');
     }
 
-    $data = $this->tmpfile->read($length);
+    $data = $tmpfile->read($length);
 
-    $this->tmpfile->destroy();
-    unset($this->tmpfile);
+    $tmpfile->destroy();
 
     return $data;
   }

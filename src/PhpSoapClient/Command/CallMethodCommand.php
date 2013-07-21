@@ -77,18 +77,13 @@ class CallMethodCommand extends SoapCommand
     else
     {
       $stdin = new StdinHelper();
-      $stdin->setBlocking(false);
-      $request_xml = $stdin->read();
+      $request_xml = $stdin->read(false);
 
       if (null === $request_xml)
       {
-        $stdin->setBlocking(true);
-
         $this->logger->info('Create xml request below and finish with <info>ctrl+d</info>:');
-        $request_xml = $stdin->read();
+        $request_xml = $stdin->read(true);
       }
-
-      $stdin->destroy();
     }
 
     $this->logger->debug('Calling method %s on the remote', $method);

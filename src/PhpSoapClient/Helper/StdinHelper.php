@@ -3,6 +3,8 @@
 namespace PhpSoapClient\Helper;
 
 use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\HelperInterface;
+
 
 
 class StdinHelper implements HelperInterface
@@ -27,49 +29,34 @@ class StdinHelper implements HelperInterface
     return $this->helperset;
   }
 
-  public function __construct()
-  {
-    $this->stream = fopen('php://stdin', 'r');
-  }
-
-  public function getBlocking()
-  {
-    return $this->blocking;
-  }
-
   public function setBlocking($blocking)
   {
     $this->blocking = (bool) $blocking;
-    stream_set_blocking($this->stream, $this->blocking ? 1 : 0);
   }
 
-  public function read()
+  public function read($blocking=null)
   {
-    if (false === $this->is_resource())
+    $stream = fopen('php://stdin', 'r');
+
+    if (false === $stream)
     {
-      throw \Exception('Connection to stdin lost');
+      throw \Exception('Could not fopen php://stdin.');
+    }
+
+    if (false === is_null($blocking))
+    {
+      stream_set_blocking($stream, (bool) $blocking ? 1 : 0);
     }
 
     $buffer = null;
 
-    while($line = fgets($this->stream, 4096))
+    while($line = fgets($stream, 4096))
     {
       $buffer .= $line;
     }
 
+    fclose($stream);
+
     return $buffer;
-  }
-
-  public function is_resource()
-  {
-    return is_resource($this->stream);
-  }
-
-  public function destroy()
-  {
-    if (true === $this->is_resource())
-    {
-      fclose($this->stream);
-    }
   }
 }
