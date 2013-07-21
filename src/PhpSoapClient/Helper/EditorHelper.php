@@ -3,11 +3,29 @@
 namespace PhpSoapClient\Helper;
 
 use PhpSoapClient\File\TmpFile;
+use Symfony\Component\Console\Helper\HelperSet;
 
-class EditorHelper
+class EditorHelper implements HelperInterface
 {
+  protected $helperset;
+
   protected $editor;
   protected $tmpfile;
+
+  public function getName()
+  {
+    return 'editor';
+  }
+
+  public function setHelperSet(HelperSet $helperSet = null)
+  {
+    $this->helperset = $helperset;
+  }
+
+  public function getHelperSet()
+  {
+    return $this->helperset;
+  }
 
   public function __construct($editor=null)
   {

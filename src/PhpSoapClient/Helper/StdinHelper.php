@@ -2,11 +2,30 @@
 
 namespace PhpSoapClient\Helper;
 
+use Symfony\Component\Console\Helper\HelperSet;
 
-class StdinHelper
+
+class StdinHelper implements HelperInterface
 {
+  protected $helperset;
+
   protected $blocking;
   protected $stream;
+
+  public function getName()
+  {
+    return 'stdin';
+  }
+
+  public function setHelperSet(HelperSet $helperSet = null)
+  {
+    $this->helperset = $helperset;
+  }
+
+  public function getHelperSet()
+  {
+    return $this->helperset;
+  }
 
   public function __construct()
   {
