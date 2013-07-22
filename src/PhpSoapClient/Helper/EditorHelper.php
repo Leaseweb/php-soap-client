@@ -34,8 +34,9 @@ class EditorHelper
       $tmpfile->write($contents);
     }
 
-    $command = sprintf('%s %s > `tty`', $this->editor, $tmpfile->filename());
-    system($command, $retval);
+    $filename = $tmpfile->filename();
+
+    system("$this->editor $filename > `tty`", $retval);
 
     if (0 !== $retval)
     {

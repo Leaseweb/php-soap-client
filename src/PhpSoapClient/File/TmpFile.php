@@ -27,12 +27,7 @@ class TmpFile
       throw \Exception('Lost track of the tmpfile');
     }
 
-    if (0 !== ftell($this->file))
-    {
-      fseek($this->file, 0);
-    }
-
-    return fread($this->file, $bytes);
+    return file_get_contents($this->info['uri']);
   }
 
   public function write($data, $offset=0)
