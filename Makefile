@@ -8,7 +8,7 @@ build: clean
 
 .PHONY: tags
 tags:
-	ctags -R --PHP-kinds=+cf --exclude=build --exclude=*.phar src/ vendor/ bin/
+	ctags -R --PHP-kinds=+cf-v --exclude=build --exclude=*.phar src/ vendor/ bin/
 
 clean:
 	rm -f soap_client.phar
