@@ -12,7 +12,12 @@ class EditorHelper
 
   public function __construct($editor=null)
   {
-    $this->editor = isset($editor) ? $editor : $_SERVER['EDITOR'];
+    $this->editor = empty($editor) ? $_SERVER['EDITOR'] : $editor;
+
+    if (true === empty($this->editor))
+    {
+      throw new \InvalidArgumentException('No favorite $EDITOR found');
+    }
   }
 
   public function getEditor()
@@ -40,7 +45,7 @@ class EditorHelper
 
     if (0 !== $retval)
     {
-      throw \Exception('Something went wrong with tmp file');
+      throw new \RuntimeException('Something went wrong with tmp file');
     }
 
     $data = $tmpfile->read($length);

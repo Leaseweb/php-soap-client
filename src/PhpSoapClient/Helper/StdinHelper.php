@@ -12,7 +12,7 @@ class StdinHelper
 
     if (false === $stream)
     {
-      throw \Exception('Could not fopen php://stdin.');
+      throw new \RuntimeException('Could not fopen php://stdin.');
     }
 
     if (false === is_null($blocking))

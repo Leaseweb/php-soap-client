@@ -6,6 +6,7 @@ class TmpFile
 {
   protected $file;
   protected $info;
+  protected $mtime;
 
   public function __construct()
   {
@@ -13,18 +14,19 @@ class TmpFile
 
     if (false === $tmpfile)
     {
-      throw new \Exception('Unable to create a tmp file');
+      throw new \RuntimeException('Unable to create a tmp file');
     }
 
     $this->file = $tmpfile;
     $this->info = stream_get_meta_data($tmpfile);
+    $this->mtime = filemtime($this->filename());
   }
 
   public function read($bytes = 2048)
   {
     if (false === $this->is_resource())
     {
-      throw \Exception('Lost track of the tmpfile');
+      throw new \RuntimeException('Lost track of the tmpfile');
     }
 
     return file_get_contents($this->info['uri']);
@@ -34,7 +36,7 @@ class TmpFile
   {
     if (false === $this->is_resource())
     {
-      throw \Exception('Lost track of the tmpfile');
+      throw new \RuntimeException('Lost track of the tmpfile');
     }
 
     if (intval($offset) !== ftell($this->file))
@@ -46,8 +48,10 @@ class TmpFile
 
     if (false === $bytes)
     {
-      throw \Exception('Unable to write contents to tmpfile');
+      throw new \RuntimeException('Unable to write contents to tmpfile');
     }
+
+    $this->mtime = filemtime($this->filename());
 
     return $bytes;
   }
@@ -55,6 +59,16 @@ class TmpFile
   public function is_resource()
   {
     return is_resource($this->file);
+  }
+
+  public function wasExternallyModified()
+  {
+    if (false === $this->is_resource())
+    {
+      throw new \RuntimeException('Lost track of the tmpfile');
+    }
+
+    return $this->mtime !== filemtime($this->filename());
   }
 
   public function destroy()
@@ -66,14 +80,20 @@ class TmpFile
 
     if (true === is_file($this->filename()))
     {
-      unlink($this->filename());
+      @unlink($this->filename());
     }
 
-    unset($this->file, $this->info);
+    $this->file = null;
+    $this->info = null;
   }
 
   public function filename()
   {
     return isset($this->info) ? $this->info['uri'] : false;
+  }
+
+  public function mtime()
+  {
+    return $this->mtime;
   }
 }

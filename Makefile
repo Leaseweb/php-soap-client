@@ -3,13 +3,14 @@ PKG_FRMT=tar.gz
 BIN=$(DESTDIR)/usr/bin
 
 APP_FILE=src/PhpSoapClient/Application.php
-
 current_version=$(shell sed -n "/protected static \$$VERSION/s/^.*'\([^']*\)'.*$$/\1/p" $(APP_FILE))
+
 
 .PHONY: clean
 build: clean
 	bin/compile
 	chmod +x soap_client.phar
+
 
 .PHONY: bump
 bump:
@@ -24,20 +25,44 @@ bump:
 	git tag -m 'Mark stable release version $(version)' -a $(version)
 	@echo "Version $(version) commited and tagged. You can 'make push' or 'make upload' now :)"
 
+
 .PHONY: tags
 tags:
 	ctags -R --PHP-kinds=+cf-v --exclude=build --exclude=*.phar src/ vendor/ bin/
 
+
 .PHONY: clean
 clean:
 	rm -f soap_client.phar
+	rm -rf build
+
 
 install:
 	install soap_client.phar $(BIN)/soap_client
 
+
 remove:
 	rm -f $(BIN)/soap_client
+
 
 .PHONY: package
 package:
 	git archive --format=$(PKG_FRMT) --prefix=$(PKG_NAME)/ $(VERSION) > $(PKG_NAME).$(PKG_FRMT)
+
+
+# Test everything
+.PHONY: test
+test: clean
+	phpunit -c tests/
+
+
+.PHONY: coverage
+coverage: clean
+	phpunit -c tests/ --coverage-html ./build/coverage
+
+
+# Push to github but run tests first
+.PHONY: push
+push: test
+	git push origin HEAD
+	git push origin --tags
