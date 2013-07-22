@@ -5,13 +5,12 @@ namespace PhpSoapClient\Client;
 
 class SoapClient extends \SoapClient
 {
-  protected $_default_value = '%%?%%';
+  protected $default_value = '%%?%%';
 
-  protected $_structs;
-  protected $_methods;
-  protected $_dry_run;
+  protected $structs;
+  protected $methods;
 
-  public function __construct($endpoint, $options)
+  public function __construct($endpoint, $options = array())
   {
     if (true === isset($options['cache_wsdl']))
     {
@@ -19,23 +18,24 @@ class SoapClient extends \SoapClient
     }
 
     parent::__construct($endpoint, $options);
+
     $this->__parseAllStructs();
     $this->__parseAllMethods();
   }
 
   public function __getStructs()
   {
-    return $this->_structs;
+    return $this->structs;
   }
 
   public function __getMethods()
   {
-    return $this->_methods;
+    return $this->methods;
   }
 
-  public function __get_default_value()
+  public function __getDefaultValue()
   {
-    return $this->_default_value;
+    return $this->default_value;
   }
 
   public function __getRequestXmlForMethod($method)
@@ -43,13 +43,13 @@ class SoapClient extends \SoapClient
     $request = $this->__getRequestObjectForMethod($method);
     $this->__call($method, $request);
 
-    $dom = new \DOMDocument;
+    $dom = new \DOMDocument();
     $dom->loadXML($this->__getLastRequest());
     $dom->preserveWhiteSpace = false;
     $dom->formatOutput = true;
 
     $request_xml = $dom->saveXml();
-    $request_xml = str_replace($this->__get_default_value(), '', $request_xml);
+    $request_xml = str_replace($this->__getDefaultValue(), '', $request_xml);
     $request_xml = preg_replace('/^<\?xml *version="1.0" *encoding="UTF-8" *\?>\n/i', '', $request_xml);
 
     return $request_xml;
@@ -57,7 +57,7 @@ class SoapClient extends \SoapClient
 
   public function __getRequestObjectForMethod($methodName)
   {
-    $arguments = $this->_methods[$methodName]; 
+    $arguments = $this->methods[$methodName]; 
     $object = array();
 
     foreach ($arguments as $arg => $struct)
@@ -72,7 +72,7 @@ class SoapClient extends \SoapClient
   {
     $response_object = $this->__getResponseObjectForMethod($method, $request_xml);
 
-    $dom = new \DOMDocument;
+    $dom = new \DOMDocument();
     $dom->loadXML($this->__getLastResponse());
     $dom->preserveWhiteSpace = false;
     $dom->formatOutput = true;
@@ -91,7 +91,7 @@ class SoapClient extends \SoapClient
     return $response_object;
   }
 
-  public function __doRequest ($request, $location, $action, $version, $one_way = 0)
+  public function __doRequest($request, $location, $action, $version, $one_way = 0)
   {
     if (true === isset($this->_requestXml))
     {
@@ -105,9 +105,9 @@ class SoapClient extends \SoapClient
 
   protected function __doRecurseStructs($struct_name)
   {
-    if (true === isset($this->_structs[$struct_name]))
+    if (true === isset($this->structs[$struct_name]))
     {
-      $struct = $this->_structs[$struct_name];
+      $struct = $this->structs[$struct_name];
 
       foreach ($struct as $key => $val)
       {
@@ -118,13 +118,13 @@ class SoapClient extends \SoapClient
     }
     else
     {
-      return $this->__get_default_value();
+      return $this->__getDefaultValue();
     }
   }
 
   protected function __parseAllMethods()
   {
-    $this->_methods = array();
+    $this->methods = array();
     foreach ($this->__getFunctions() as $raw_method)
     {
       preg_match('/(?P<response>\w+) (?P<method>\w+)\((?P<args>[^\)]+)/', $raw_method, $matches);
@@ -132,7 +132,7 @@ class SoapClient extends \SoapClient
       foreach (explode(', ', $matches['args']) as $arg)
       {
         preg_match('/(?P<type>\w+) \$(?P<name>\w+)/', $arg, $matches2);
-        $this->_methods[$matches['method']][$matches2['name']] = $matches2['type'];
+        $this->methods[$matches['method']][$matches2['name']] = $matches2['type'];
         unset($matches2);
       }
       unset($matches);
@@ -141,7 +141,7 @@ class SoapClient extends \SoapClient
 
   protected function __parseAllStructs()
   {
-    $this->_structs = array();
+    $this->structs = array();
     foreach ($this->__getTypes() as $raw_struct)
     {
       preg_match('/struct (?P<name>\w+) {/', $raw_struct, $matches);
@@ -149,7 +149,7 @@ class SoapClient extends \SoapClient
       {
         continue;
       }
-      $this->_structs[$matches['name']] = $this->__parseSingleStruct($raw_struct);
+      $this->structs[$matches['name']] = $this->__parseSingleStruct($raw_struct);
       unset($matches);
     }
   }
