@@ -8,7 +8,7 @@ use Symfony\Component\Console\Application as BaseApplication;
 class Application extends BaseApplication
 {
   protected static $NAME = 'php-soap-client';
-  protected static $VERSION = '2.0.0';
+  protected static $VERSION = '2.1.0';
 
   public function __construct()
   {
