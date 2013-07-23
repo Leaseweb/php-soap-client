@@ -1,0 +1,23 @@
+<?php
+
+process($argv);
+
+function process($argv)
+{
+  $install_dir = '';
+
+  $install_dir = realpath($install_dir) ? realpath($install_dir) : getcwd();
+  $source = "http://nrocco.github.io/php-soap-client/soap_client.phar";
+  $file = rtrim($install_dir, '/') . DIRECTORY_SEPARATOR . 'soap_client';
+
+  if (is_readable($file)) {
+      @unlink($file);
+  }
+
+  $fh = fopen($file, 'w');
+  fwrite($fh, file_get_contents($source)) or die('error downloading soap_client');
+  fclose($fh);
+
+  chmod($file, 0755);
+  echo 'Done installing into ' . $file . PHP_EOL;
+}
