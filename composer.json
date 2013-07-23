@@ -13,6 +13,9 @@
         "symfony/console": "v2.3.2",
         "symfony/finder": "v2.3.2"
     },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.22"
+    },
     "autoload": {
         "psr-0": {"": "src/"}
     }

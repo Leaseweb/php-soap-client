@@ -12,7 +12,7 @@ class EditorHelper
 
   public function __construct($editor=null)
   {
-    $this->editor = empty($editor) ? $_SERVER['EDITOR'] : $editor;
+    $this->editor = empty($editor) ? @$_SERVER['EDITOR'] : $editor;
 
     if (true === empty($this->editor))
     {

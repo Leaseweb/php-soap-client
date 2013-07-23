@@ -1,27 +1,5 @@
 <?php
 
-namespace PhpSoapClient\File;
-
-function tmpfile()
-{
-  if (array_key_exists('mock_tmpfile', $GLOBALS))
-  {
-    return false;
-  }
-  return \tmpfile();
-}
-
-function fwrite($file, $data)
-{
-  if (array_key_exists('mock_fwrite', $GLOBALS))
-  {
-    return false;
-  }
-  return \fwrite($file, $data);
-}
-
-
-
 namespace PhpSoapClient\Test\File;
 
 use PhpSoapClient\File\TmpFile;

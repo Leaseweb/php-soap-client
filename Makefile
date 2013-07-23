@@ -24,7 +24,7 @@ bump:
 
 .PHONY: tags
 tags:
-	ctags -R --PHP-kinds=+cf-v --exclude=build --exclude=*.phar src/ vendor/ bin/
+	ctags -R --PHP-kinds=+cf-v --exclude=build --exclude=*.phar src/ vendor/ bin/ tests/
 
 
 .PHONY: clean

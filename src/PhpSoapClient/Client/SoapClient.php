@@ -145,10 +145,6 @@ class SoapClient extends \SoapClient
     foreach ($this->__getTypes() as $raw_struct)
     {
       preg_match('/struct (?P<name>\w+) {/', $raw_struct, $matches);
-      if (false === isset($matches['name']))
-      {
-        continue;
-      }
       $this->structs[$matches['name']] = $this->__parseSingleStruct($raw_struct);
       unset($matches);
     }

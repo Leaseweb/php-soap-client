@@ -2,25 +2,23 @@
 
 namespace PhpSoapClient\Test\Command;
 
-use PhpSoapClient\Application;
 use PhpSoapClient\Command\GetWsdlCommand;
-use Symfony\Component\Console\Tester\CommandTester;
 
 
 
-class GetMethodRequestXmlCommandTest extends \PHPUnit_Framework_TestCase
+class GetMethodRequestXmlCommandTest extends BaseCommandTest
 {
+  protected $NAME = 'request';
+
   /**
    * @expectedException         RuntimeException
    * @expectedExceptionMessage  Not enough arguments.
    */
   public function testExecuteNotEnoughArguments()
   {
-    $application = new Application();
-
-    $command = $application->find('request');
-    $commandTester = new CommandTester($command);
-    $commandTester->execute(array('command' => $command->getName()));
+    $this->getCommandTester()->execute(array(
+      'command' => $this->NAME
+    ));
   }
 
   /**
@@ -29,12 +27,23 @@ class GetMethodRequestXmlCommandTest extends \PHPUnit_Framework_TestCase
    */
   public function testExecuteWithoutEndpoint()
   {
-    $application = new Application();
+    $this->getCommandTester()->execute(array(
+      'command' => $this->NAME,
+      'stakker'
+    ));
+  }
 
-    $command = $application->find('call');
-    $commandTester = new CommandTester($command);
-    $commandTester->execute(
-      array('command' => $command->getName(), 'stakker')
-    );
+  public function testExecute()
+  {
+    $tester = $this->getCommandTester();
+    $tester->execute(array(
+      'command' => $this->NAME,
+      '--endpoint' => 'http://www.w3schools.com/webservices/tempconvert.asmx?WSDL',
+      'method' => 'FahrenheitToCelsius'
+    ));
+    $this->assertRegExp('/ns1:FahrenheitToCelsius/', $tester->getDisplay());
+    $this->assertRegExp('/SOAP-ENV:Envelope/', $tester->getDisplay());
+    $this->assertRegExp('/SOAP-ENV:Body/', $tester->getDisplay());
+    $this->assertRegExp('/ns1:Fahrenheit/', $tester->getDisplay());
   }
 }

@@ -2,23 +2,13 @@
 
 namespace PhpSoapClient\Test\Command;
 
-use PhpSoapClient\Application;
 use PhpSoapClient\Command\GetWsdlCommand;
-use Symfony\Component\Console\Tester\CommandTester;
 
 
 
-class ListMethodsCommandTest extends \PHPUnit_Framework_TestCase
+class ListMethodsCommandTest extends BaseCommandTest
 {
-  protected static $NAME = 'list-methods';
-
-  protected function getCommandTester()
-  {
-    $application = new Application();
-    $command = $application->find(self::$NAME);
-
-    return new CommandTester($command);
-  }
+  protected $NAME = 'list-methods';
 
   /**
    * @expectedException         InvalidArgumentException
@@ -27,7 +17,7 @@ class ListMethodsCommandTest extends \PHPUnit_Framework_TestCase
   public function testExecuteWithoutEndpoint()
   {
     $this->getCommandTester()->execute(array(
-      'command' => self::$NAME
+      'command' => $this->NAME
     ));
   }
 
@@ -35,7 +25,7 @@ class ListMethodsCommandTest extends \PHPUnit_Framework_TestCase
   {
     $tester = $this->getCommandTester();
     $tester->execute(array(
-      'command' => self::$NAME,
+      'command' => $this->NAME,
       '--verbose' => 3,
       '--cache' => true,
       '--endpoint' => 'http://www.w3schools.com/webservices/tempconvert.asmx?WSDL',
@@ -51,7 +41,7 @@ class ListMethodsCommandTest extends \PHPUnit_Framework_TestCase
   public function testExecuteInvalidEndpoint()
   {
     $this->getCommandTester()->execute(array(
-        'command' => self::$NAME,
+        'command' => $this->NAME,
         '--endpoint' => 'http://www.example.com/webservices/tempconvert.asmx?WSDL',
     ));
   }

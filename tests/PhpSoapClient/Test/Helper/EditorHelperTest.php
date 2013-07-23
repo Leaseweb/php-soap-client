@@ -1,22 +1,5 @@
 <?php
 
-namespace PhpSoapClient\Helper;
-
-function system($command, &$retval)
-{
-  if (array_key_exists('mock_system_retval', $GLOBALS))
-  {
-    if (!is_null($GLOBALS['mock_system_retval']))
-    {
-      $retval = $GLOBALS['mock_system_retval'];
-      return '';
-    }
-  }
-
-  return \system($command, $retval);
-}
-
-
 namespace PhpSoapClient\Test\Helper;
 
 use PhpSoapClient\Helper\EditorHelper;
@@ -25,9 +8,20 @@ use PhpSoapClient\Helper\EditorHelper;
 
 class EditorHelperTest extends \PHPUnit_Framework_TestCase
 {
+  public function setUp()
+  {
+    unset($GLOBALS['mock_system_retval']);
+    $_SERVER['EDITOR'] = '';
+  }
+
+  public function tearDown()
+  {
+    unset($GLOBALS['mock_system_retval']);
+    $_SERVER['EDITOR'] = '';
+  }
+
   public function testDefaultEditor()
   {
-    $current_editor = $_SERVER['EDITOR'];
     $_SERVER['EDITOR'] = 'vim';
 
     $editor = new EditorHelper();
@@ -37,8 +31,6 @@ class EditorHelperTest extends \PHPUnit_Framework_TestCase
       $editor->getEditor(),
       '::getEditor() gets the name of the editor'
     );
-
-    $_SERVER['EDITOR'] = $current_editor;
   }
   
   /**
@@ -47,15 +39,18 @@ class EditorHelperTest extends \PHPUnit_Framework_TestCase
    */
   public function testNoValidEditor()
   {
-    $current_editor = $_SERVER['EDITOR'];
-
-    $_SERVER['EDITOR'] = '';
-    $editor = new EditorHelper();
-
     unset($_SERVER['EDITOR']);
     $editor = new EditorHelper();
+  }
 
-    $_SERVER['EDITOR'] = $current_editor;
+  /**
+   * @expectedException   InvalidArgumentException
+   * @expectedExceptionMessage  No favorite $EDITOR found
+   */
+  public function testEditorEmptyString()
+  {
+    $_SERVER['EDITOR'] = '';
+    $editor = new EditorHelper();
   }
 
   public function testSetSpecificEditor()
@@ -95,10 +90,5 @@ class EditorHelperTest extends \PHPUnit_Framework_TestCase
 
     $editor = new EditorHelper('vim');
     $content = $editor->open_and_read('test');
-  }
-
-  protected function tearDown()
-  {
-    unset($GLOBALS['mock_system_retval']);
   }
 }

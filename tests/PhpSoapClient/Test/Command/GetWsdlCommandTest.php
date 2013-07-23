@@ -2,23 +2,13 @@
 
 namespace PhpSoapClient\Test\Command;
 
-use PhpSoapClient\Application;
 use PhpSoapClient\Command\GetWsdlCommand;
-use Symfony\Component\Console\Tester\CommandTester;
 
 
 
-class GetWsdlCommandTest extends \PHPUnit_Framework_TestCase
+class GetWsdlCommandTest extends BaseCommandTest
 {
-  protected static $NAME = 'wsdl';
-
-  protected function getCommandTester()
-  {
-    $application = new Application();
-    $command = $application->find(self::$NAME);
-
-    return new CommandTester($command);
-  }
+  protected $NAME = 'wsdl';
 
   /**
    * @expectedException         InvalidArgumentException
@@ -28,7 +18,7 @@ class GetWsdlCommandTest extends \PHPUnit_Framework_TestCase
   {
     $tester = $this->getCommandTester();
     $tester->execute(array(
-      'command' => self::$NAME
+      'command' => $this->NAME
     ));
   }
 
@@ -36,7 +26,7 @@ class GetWsdlCommandTest extends \PHPUnit_Framework_TestCase
   {
     $tester = $this->getCommandTester();
     $tester->execute(array(
-      'command' => self::$NAME,
+      'command' => $this->NAME,
       '--endpoint' => 'http://www.w3schools.com/webservices/tempconvert.asmx?WSDL',
     ));
 

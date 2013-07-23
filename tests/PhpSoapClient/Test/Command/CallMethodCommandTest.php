@@ -2,23 +2,13 @@
 
 namespace PhpSoapClient\Test\Command;
 
-use PhpSoapClient\Application;
 use PhpSoapClient\Command\GetWsdlCommand;
-use Symfony\Component\Console\Tester\CommandTester;
 
 
 
-class CallMethodCommandTest extends \PHPUnit_Framework_TestCase
+class CallMethodCommandTest extends BaseCommandTest
 {
-  protected static $NAME = 'call';
-
-  protected function getCommandTester()
-  {
-    $application = new Application();
-    $command = $application->find(self::$NAME);
-
-    return new CommandTester($command);
-  }
+  protected $NAME = 'call';
 
   /**
    * @expectedException         RuntimeException
@@ -26,7 +16,7 @@ class CallMethodCommandTest extends \PHPUnit_Framework_TestCase
    */
   public function testExecuteNotEnoughArguments()
   {
-    $this->getCommandTester()->execute(array('command' => self::$NAME));
+    $this->getCommandTester()->execute(array('command' => $this->NAME));
   }
 
   /**
@@ -36,7 +26,7 @@ class CallMethodCommandTest extends \PHPUnit_Framework_TestCase
   public function testExecuteWithoutEndpoint()
   {
     $this->getCommandTester()->execute(
-      array('command' => self::$NAME, 'stakker')
+      array('command' => $this->NAME, 'stakker')
     );
   }
 
@@ -48,7 +38,7 @@ class CallMethodCommandTest extends \PHPUnit_Framework_TestCase
     $_SERVER['SOAPCLIENT_ENDPOINT'] = 'http://www.example.com/webservices/tempconvert.asmx?WSDL';
 
     $this->getCommandTester()->execute(
-      array('command' => self::$NAME, 'stakker')
+      array('command' => $this->NAME, 'stakker')
     );
   }
 
@@ -58,14 +48,41 @@ class CallMethodCommandTest extends \PHPUnit_Framework_TestCase
   public function testExecuteInvalidEndpoint()
   {
     $this->getCommandTester()->execute(array(
-        'command' => self::$NAME,
+        'command' => $this->NAME,
         '--endpoint' => 'http://www.example.com/webservices/tempconvert.asmx?WSDL',
         'method' => 'stakker'
     ));
   }
 
-  protected function tearDown()
+  public function testCallingMethodUsingEditorResponseAsXml()
   {
-    unset($_SERVER['SOAPCLIENT_ENDPOINT']);
+    $GLOBALS['mock_system_retval'] = 0;
+
+    $tester = $this->getCommandTester();
+    $tester->execute(array(
+      'command' => $this->NAME,
+      '--endpoint' => 'http://www.w3schools.com/webservices/tempconvert.asmx?WSDL',
+      '--editor' => true,
+      '--xml' => true,
+      'method' => 'FahrenheitToCelsius'
+    ));
+  }
+
+  public function testCallingMethodUsingEditorResponseAsObject()
+  {
+    $GLOBALS['mock_fgets'] = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://tempuri.org/">
+<SOAP-ENV:Body>
+<ns1:FahrenheitToCelsius>
+<ns1:Fahrenheit>23</ns1:Fahrenheit>
+</ns1:FahrenheitToCelsius>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>';
+
+    $tester = $this->getCommandTester();
+    $tester->execute(array(
+      'command' => $this->NAME,
+      '--endpoint' => 'http://www.w3schools.com/webservices/tempconvert.asmx?WSDL',
+      'method' => 'FahrenheitToCelsius'
+    ));
   }
 }

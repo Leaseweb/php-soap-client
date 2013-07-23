@@ -1,28 +1,5 @@
 <?php
 
-namespace PhpSoapClient\Helper;
-
-function fopen($stream, $mode)
-{
-  if (array_key_exists('mock_fopen', $GLOBALS))
-  {
-    return false;
-  }
-  return \fopen($stream, $mode);
-}
-
-function fgets($stream, $bytes)
-{
-  if (array_key_exists('mock_fgets', $GLOBALS))
-  {
-    $data = $GLOBALS['mock_fgets'];
-    unset($GLOBALS['mock_fgets']);
-    return $data;
-  }
-  return \fgets($stream, $bytes);
-}
-
-
 namespace PhpSoapClient\Test\Helper;
 
 use PhpSoapClient\Helper\StdinHelper;
