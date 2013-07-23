@@ -1,7 +1,3 @@
-PKG_NAME=php-soap-client-$(VERSION)
-PKG_FRMT=tar.gz
-BIN=$(DESTDIR)/usr/bin
-
 APP_FILE=src/PhpSoapClient/Application.php
 current_version=$(shell sed -n "/protected static \$$VERSION/s/^.*'\([^']*\)'.*$$/\1/p" $(APP_FILE))
 
@@ -35,19 +31,6 @@ tags:
 clean:
 	rm -f soap_client.phar
 	rm -rf build
-
-
-install:
-	install soap_client.phar $(BIN)/soap_client
-
-
-remove:
-	rm -f $(BIN)/soap_client
-
-
-.PHONY: package
-package:
-	git archive --format=$(PKG_FRMT) --prefix=$(PKG_NAME)/ $(VERSION) > $(PKG_NAME).$(PKG_FRMT)
 
 
 # Test everything
