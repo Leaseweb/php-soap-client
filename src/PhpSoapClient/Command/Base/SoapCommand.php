@@ -52,17 +52,12 @@ class SoapCommand extends Command
     }
     else
     {
-      throw new \Exception('You must specify an endpoint.');
+      throw new \InvalidArgumentException('You must specify an endpoint.');
     }
   }
 
   protected function getSoapClient($endpoint, $cache=false, $timeout=120)
   {
-    if (empty($endpoint))
-    {
-      throw new \Exception('You must specify an endpoint.');
-    }
-
     if (true === $cache)
     {
       $this->logger->debug('Enabling caching of wsdl');

@@ -19,8 +19,9 @@ class ListMethodsCommand extends SoapCommand
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
+    $cache = $input->getOption('cache');
     $endpoint = $this->getEndpoint($input);
-    $service = $this->getSoapClient($endpoint);
+    $service = $this->getSoapClient($endpoint, $cache);
 
     $this->logger->debug('Listing all available methods on the remote.');
 
@@ -28,7 +29,7 @@ class ListMethodsCommand extends SoapCommand
 
     foreach (array_keys($service->__getMethods()) as $method)
     {
-      echo $method.PHP_EOL;
+      $output->writeln($method);
     }
 
     $this->logger->debug('Done.');

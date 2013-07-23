@@ -46,11 +46,6 @@ class CallMethodCommand extends SoapCommand
     $endpoint = $this->getEndpoint($input);
     $method = $input->getArgument('method');
 
-    if (false === isset($method))
-    {
-      throw new \Exception('You must specify a method name to call');
-    }
-
     $service = $this->getSoapClient($endpoint, $input->getOption('cache'));
 
     if (true === $input->getOption('editor'))
@@ -102,6 +97,6 @@ class CallMethodCommand extends SoapCommand
     $this->logger->debug('Calling method took %s seconds', microtime(true) - $t1);
     unset($t1);
 
-    print_r($response);
+    $output->writeln(print_r($response, true));
   }
 }

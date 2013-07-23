@@ -21,15 +21,8 @@ class GetWsdlCommand extends SoapCommand
   {
     $endpoint = $this->getEndpoint($input);
 
-    if (false === isset($endpoint))
-    {
-      throw new \Exception('You must specify an endpoint');
-    }
-
     $this->logger->debug('Exploring wsdl at %s', $endpoint);
-
-    echo file_get_contents($endpoint) . PHP_EOL;
-
+    $output->writeln(file_get_contents($endpoint));
     $this->logger->debug('Done');
   }
 }
