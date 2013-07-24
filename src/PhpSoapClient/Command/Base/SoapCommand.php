@@ -6,32 +6,12 @@ use PhpSoapClient\Client\SoapClient;
 use PhpSoapClient\Helper\LoggerHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
 class SoapCommand extends Command
 {
   protected $logger;
-
-  protected function configure()
-  {
-    parent::configure();
-
-    $this->addOption(
-      'endpoint',
-      null,
-      InputOption::VALUE_REQUIRED,
-      'Specify the url to the wsdl of the SOAP webservice to inspect.'
-    );
-
-    $this->addOption(
-      'cache',
-      null,
-      InputOption::VALUE_NONE,
-      'Flag to enable caching of the wsdl. By default this is disabled.'
-    );
-  }
 
   protected function initialize(InputInterface $input, OutputInterface $output)
   {
