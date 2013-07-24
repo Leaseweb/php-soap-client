@@ -7,7 +7,7 @@ A command line application to explore SOAP services
 Usage
 =====
 
-    php-soap-client version 2.0.0
+    php-soap-client version 2.1.2
 
     Usage:
       [options] command [arguments]
@@ -20,6 +20,9 @@ Usage
       --ansi              Force ANSI output.
       --no-ansi           Disable ANSI output.
       --no-interaction -n Do not ask any interactive question.
+      --endpoint          Specify the url to the wsdl of the SOAP webservice to inspect.
+      --proxy             Use this proxy to connect to the SOAP web service. E.g: --proxy=my.proxy.com:8080
+      --cache             Flag to enable caching of the wsdl. By default this is disabled.
 
     Available commands:
       call           Call the remote service with the `method` specified and output the reponse to stdout.
@@ -28,7 +31,6 @@ Usage
       list-methods   Get a list of available methods to call on the remote.
       request        Generate an xml formatted SOAP request for the given method and output to stdout.
       wsdl           Get the WSDL of a soap service.
-
 
 
 Installation
