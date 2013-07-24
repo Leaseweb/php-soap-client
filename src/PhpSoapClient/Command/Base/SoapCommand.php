@@ -36,8 +36,14 @@ class SoapCommand extends Command
     }
   }
 
-  protected function getSoapClient($endpoint, $cache=false, $timeout=120)
+  protected function getSoapClient(InputInterface $input, $timeout=120)
   {
+    $cache = $input->getOption('cache');
+    $endpoint = $this->getEndpoint($input);
+    $proxy = $input->getOption('proxy');
+
+    $this->logger->debug('Discovering endpoint %s', $endpoint);
+
     if (true === $cache)
     {
       $this->logger->debug('Enabling caching of wsdl');

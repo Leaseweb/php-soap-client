@@ -43,10 +43,8 @@ class CallMethodCommand extends SoapCommand
 
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    $endpoint = $this->getEndpoint($input);
+    $service = $this->getSoapClient($input);
     $method = $input->getArgument('method');
-
-    $service = $this->getSoapClient($endpoint, $input->getOption('cache'));
 
     if (true === $input->getOption('editor'))
     {
