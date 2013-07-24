@@ -24,6 +24,7 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
     unset($GLOBALS['mock_fgets']);
     unset($GLOBALS['mock_system_retval']);
     unset($_SERVER['SOAPCLIENT_ENDPOINT']);
+    unset($_SERVER['EDITOR']);
   }
 
   protected function tearDown()
@@ -31,5 +32,6 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
     unset($GLOBALS['mock_fgets']);
     unset($GLOBALS['mock_system_retval']);
     unset($_SERVER['SOAPCLIENT_ENDPOINT']);
+    unset($_SERVER['EDITOR']);
   }
 }

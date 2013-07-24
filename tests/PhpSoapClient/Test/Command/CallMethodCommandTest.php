@@ -57,6 +57,7 @@ class CallMethodCommandTest extends BaseCommandTest
   public function testCallingMethodUsingEditorResponseAsXml()
   {
     $GLOBALS['mock_system_retval'] = 0;
+    $_SERVER['EDITOR'] = 'nano';
 
     $tester = $this->getCommandTester();
     $tester->execute(array(
