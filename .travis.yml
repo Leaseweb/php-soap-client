@@ -1,5 +1,10 @@
 language: php
 
+notifications:
+  email:
+    on_success: always
+    on_failure: always
+
 php:
   - 5.3
   - 5.4
