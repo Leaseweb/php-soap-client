@@ -7,7 +7,7 @@ A command line application to explore SOAP services
 Usage
 =====
 
-    php-soap-client version 2.1.2
+    php-soap-client version 2.1.3
 
     Usage:
       [options] command [arguments]
