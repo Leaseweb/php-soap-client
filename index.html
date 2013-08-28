@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>php-soap-client</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+
+        <style type="text/css" media="all">
+            body {
+                padding-top: 40px;
+                padding-bottom: 40px;
+            }
+        </style>
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="../../assets/js/html5shiv.js"></script>
+        <script src="../../assets/js/respond.min.js"></script>
+        <![endif]-->
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="//code.jquery.com/jquery.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+        <script src="app.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1>php-soap-client</h1>
+                <form id="parse_wsdl" action="" class="inline-form" method="get" accept-charset="utf-8">
+                    <div class="input-group">
+                        <input class="form-control" type="url" name="wsdl_endpoint" id="wsdl_endpoint" value="" placeholder="WSDL Endpoint..." />
+                        <div class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">Parse WSDL!</button>
+                        </div>
+                    </div>
+                </form>
+                <form class="inline-form" action="" method="get" accept-charset="utf-8">
+                    <div class="input-group">
+                        <select name="" id="" class="form-control">
+                            <option value="FahrenheitToCelsius">FahrenheitToCelsius</option>
+                            <option value="CelsiusToFahrenheit">CelsiusToFahrenheit</option>
+                        </select>
+                        <div class="input-group-btn" style="padding-left: 5px;">
+                            <button class="btn btn-success" type="submit">Generate SOAP Request</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="request">SOAP Request</label>
+                            <textarea class="form-control" name="request" id="request" rows="16"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-6">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="response">SOAP Response</label>
+                            <textarea class="form-control" name="response" id="response" rows="16"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
