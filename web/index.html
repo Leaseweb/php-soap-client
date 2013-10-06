@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>php-soap-client</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+
+        <style type="text/css" media="all">
+            body {
+                padding-top: 40px;
+                padding-bottom: 40px;
+            }
+
+            #reset_wsdl, #reqresp {
+                display: none;
+            }
+
+            #methods {
+                visibility: none;
+            }
+
+            #response, #request {
+                overflow-x: auto;
+                overflow: auto;
+                word-wrap: normal;
+                white-space: pre;
+            }
+
+            #response code, #request code {
+                overflow-wrap: normal;
+                white-space: pre;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1>php-soap-client</h1>
+                <div id="wsdl" class="input-group">
+                    <input id="wsdl_endpoint" class="form-control" type="url" value="http://www.w3schools.com/webservices/tempconvert.asmx?WSDL" placeholder="WSDL Endpoint..." />
+                    <div class="input-group-btn">
+                        <button id="parse_wsdl" class="btn btn-primary">Parse WSDL!</button>
+                        <button id="reset_wsdl" class="btn btn-danger">Reset</button>
+                    </div>
+                </div>
+                <div id="methods" class="input-group">
+                    <select id="method-list" class="form-control">
+                    </select>
+                    <div class="input-group-btn" style="padding-left: 5px;">
+                        <button id="get-request" class="btn btn-success">Generate SOAP Request</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="reqresp" class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="request">SOAP Request</label>
+                        <pre id="request" contenteditable="true"><code></code></pre>
+                        <button id="call-method" class="btn btn-warning">Call Method</button>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="response">SOAP Response</label>
+                        <pre id="response"><code></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="//code.jquery.com/jquery.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="app.js" type="text/javascript" charset="utf-8"></script>
+    </body>
+</html>

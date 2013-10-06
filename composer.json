@@ -11,7 +11,8 @@
     "minimum-stability": "stable",
     "require": {
         "symfony/console": "v2.3.2",
-        "symfony/finder": "v2.3.2"
+        "symfony/finder": "v2.3.2",
+        "silex/silex": "1.*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.22"
