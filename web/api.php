@@ -5,13 +5,26 @@ require_once __DIR__.'/../vendor/autoload.php';
 use Symfony\Component\HttpFoundation\Request;
 
 $app = new Silex\Application();
-$app['debug'] = true;
+
 $app->before(function (Request $request) use ($app) {
     $wsdl = $request->get('wsdl', null);
+
+    if (true === empty($wsdl))
+    {
+        throw new \RuntimeException('No wsdl found in the query string');
+    }
+
     $app['soapclient'] = new PhpSoapClient\Client\SoapClient($wsdl, array(
       'trace' => 1,
       'exceptions' => true,
       'connection_timeout' => 10,
+    ));
+});
+
+$app->error(function (\Exception $e, $code) use ($app) {
+    return $app->json(array(
+        'code' => $code,
+        'error' => $e->getMessage()
     ));
 });
 
