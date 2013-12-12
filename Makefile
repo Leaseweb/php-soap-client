@@ -49,3 +49,10 @@ coverage: clean
 push: test
 	git push origin HEAD
 	git push origin --tags
+
+
+# Install the binary into /usr/local/bin
+.PHONY: install
+install:
+	mkdir -p /usr/local/bin
+	cp soap_client.phar /usr/local/bin

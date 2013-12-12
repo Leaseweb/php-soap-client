@@ -7,6 +7,14 @@ A command line application to explore SOAP services
 Usage
 =====
 
+To see all the options and arguments you can throw at `soap_client.phar` read
+the `help`:
+
+    soap_client.phar --help
+
+
+This will output something like:
+
     php-soap-client version 2.1.3
 
     Usage:
@@ -40,16 +48,15 @@ Installation
 
 Download the latest `soap_client.phar` and start using it immediatly:
 
-    wget http://nrocco.github.io/php-soap-client/soap_client.phar
+    wget http://leaseweb.github.io/php-soap-client/soap_client.phar
     chmod +x soap_client.phar
-    soap_client.phar --help
 
 
 *Difficult method (needs sudo):*
 
 To install `soap_client` in `/usr/bin` you can checkout the source code and build from there:
 
-    git clone https://github.com/nrocco/php-soap-client.git
+    git clone https://github.com/leaseweb/php-soap-client.git
     cd php-soap-client
+    make
     sudo make install
-    soap_client --help

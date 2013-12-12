@@ -1,11 +1,11 @@
 {
-    "name": "nrocco/phpsoapclient",
+    "name": "leaseweb/phpsoapclient",
     "description": "A CLI PHP Soap Client",
     "license": "BSD-4-Clause",
     "authors": [
         {
             "name": "Nico Di Rocco",
-            "email": "dirocco.nico@gmail.com"
+            "email": "n.dirocco@ocom.com"
         }
     ],
     "minimum-stability": "stable",
