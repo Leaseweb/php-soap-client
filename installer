@@ -7,7 +7,7 @@ function process($argv)
   $install_dir = '';
 
   $install_dir = realpath($install_dir) ? realpath($install_dir) : getcwd();
-  $source = "http://nrocco.github.io/php-soap-client/soap_client.phar";
+  $source = "http://leaseweb.github.io/php-soap-client/soap_client.phar";
   $file = rtrim($install_dir, '/') . DIRECTORY_SEPARATOR . 'soap_client';
 
   if (is_readable($file)) {
