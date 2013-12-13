@@ -55,4 +55,4 @@ push: test
 .PHONY: install
 install:
 	mkdir -p /usr/local/bin
-	cp soap_client.phar /usr/local/bin
+	cp soap_client.phar /usr/local/bin/soap_client
