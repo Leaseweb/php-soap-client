@@ -22,7 +22,7 @@ class TmpFile
     $this->mtime = filemtime($this->filename());
   }
 
-  public function read($bytes = 2048)
+  public function read()
   {
     if (false === $this->is_resource())
     {

@@ -16,6 +16,8 @@ class SoapCommand extends Command
   protected function initialize(InputInterface $input, OutputInterface $output)
   {
     $this->logger = new LoggerHelper($output);
+
+    parent::initialize($input, $output);
   }
 
   protected function getEndpoint(InputInterface $input)
@@ -40,7 +42,6 @@ class SoapCommand extends Command
   {
     $cache = $input->getOption('cache');
     $endpoint = $this->getEndpoint($input);
-    $proxy = $input->getOption('proxy');
 
     $this->logger->debug('Discovering endpoint %s', $endpoint);
 

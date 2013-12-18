@@ -30,7 +30,7 @@ class EditorHelper
     $this->editor = $editor;
   }
 
-  public function open_and_read($contents=null, $length = 2048)
+  public function open_and_read($contents=null)
   {
     $tmpfile = new TmpFile();
 
@@ -48,7 +48,7 @@ class EditorHelper
       throw new \RuntimeException('Something went wrong with tmp file');
     }
 
-    $data = $tmpfile->read($length);
+    $data = $tmpfile->read();
 
     $tmpfile->destroy();
 

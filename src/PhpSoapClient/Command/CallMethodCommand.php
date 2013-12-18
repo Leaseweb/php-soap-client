@@ -81,7 +81,7 @@ class CallMethodCommand extends SoapCommand
     }
 
     $this->logger->debug('Calling method %s on the remote', $method);
-    $t1 = microtime(true);
+    $start_time = microtime(true);
 
     if (true === $input->getOption('xml'))
     {
@@ -92,8 +92,8 @@ class CallMethodCommand extends SoapCommand
       $response = $service->__getResponseObjectForMethod($method, $request_xml);
     }
 
-    $this->logger->debug('Calling method took %s seconds', microtime(true) - $t1);
-    unset($t1);
+    $this->logger->debug('Calling method took %s seconds', microtime(true) - $start_time);
+    unset($start_time);
 
     $output->writeln(print_r($response, true));
   }

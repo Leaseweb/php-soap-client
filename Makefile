@@ -36,12 +36,17 @@ clean:
 # Test everything
 .PHONY: test
 test: clean
-	phpunit -c tests/
+	vendor/bin/phpunit -c tests/
+
+
+.PHONY: phpmd
+phpmd:
+	vendor/bin/phpmd src text codesize,unusedcode,naming,design
 
 
 .PHONY: coverage
 coverage: clean
-	phpunit -c tests/ --coverage-html ./build/coverage
+	vendor/bin/phpunit -c tests/ --coverage-html ./build/coverage
 
 
 # Push to github but run tests first

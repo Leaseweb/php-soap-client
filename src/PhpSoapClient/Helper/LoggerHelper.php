@@ -15,6 +15,11 @@ class LoggerHelper
     $this->_output = $output;
   }
 
+  public function info()
+  {
+    $this->_log_stdout(OutputInterface::VERBOSITY_NORMAL, func_get_args());
+  }
+
   public function debug()
   {
     $this->_log_stdout(OutputInterface::VERBOSITY_DEBUG, func_get_args());

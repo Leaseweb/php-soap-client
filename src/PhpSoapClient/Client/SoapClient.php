@@ -60,7 +60,7 @@ class SoapClient extends \SoapClient
     $arguments = $this->methods[$methodName]; 
     $object = array();
 
-    foreach ($arguments as $arg => $struct)
+    foreach ($arguments as $struct)
     {
       $object[] = $this->__doRecurseStructs($struct);
     }
@@ -70,7 +70,8 @@ class SoapClient extends \SoapClient
 
   public function __getResponseXmlForMethod($method, $request_xml)
   {
-    $response_object = $this->__getResponseObjectForMethod($method, $request_xml);
+    /* We can get the XML directly through SoapClient::__getLastResponse() */
+    $this->__getResponseObjectForMethod($method, $request_xml);
 
     $dom = new \DOMDocument();
     $dom->loadXML($this->__getLastResponse());
