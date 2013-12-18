@@ -41,7 +41,7 @@ test: clean
 
 .PHONY: phpmd
 phpmd:
-	vendor/bin/phpmd src text codesize,unusedcode,naming,design
+	vendor/bin/phpmd src text codesize,unusedcode,naming,design; [ $$? -eq 2 ] && true
 
 
 .PHONY: coverage
