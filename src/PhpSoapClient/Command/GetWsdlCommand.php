@@ -8,20 +8,20 @@ use PhpSoapClient\Command\Base\SoapCommand;
 
 class GetWsdlCommand extends SoapCommand
 {
-  protected function configure()
-  {
-    parent::configure();
+    protected function configure()
+    {
+        parent::configure();
 
-    $this->setName('wsdl');
-    $this->setDescription('Get the WSDL of a soap service.');
-  }
+        $this->setName('wsdl');
+        $this->setDescription('Get the WSDL of a soap service.');
+    }
 
-  protected function execute(InputInterface $input, OutputInterface $output)
-  {
-    $endpoint = $this->getEndpoint($input);
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $endpoint = $this->getEndpoint($input);
 
-    $this->logger->debug('Exploring wsdl at %s', $endpoint);
-    $output->writeln(file_get_contents($endpoint));
-    $this->logger->debug('Done');
-  }
+        $this->logger->debug('Exploring wsdl at %s', $endpoint);
+        $output->writeln(file_get_contents($endpoint));
+        $this->logger->debug('Done');
+    }
 }

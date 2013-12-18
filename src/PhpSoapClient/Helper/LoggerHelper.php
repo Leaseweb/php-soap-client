@@ -6,27 +6,27 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class LoggerHelper
 {
-  protected $_ouput;
+    protected $_ouput;
 
-  public function __construct(OutputInterface $output)
-  {
-    $this->_output = $output;
-  }
-
-  public function info()
-  {
-    $this->_log_stdout(OutputInterface::VERBOSITY_NORMAL, func_get_args());
-  }
-
-  public function debug()
-  {
-    $this->_log_stdout(OutputInterface::VERBOSITY_DEBUG, func_get_args());
-  }
-
-  protected function _log_stdout($level, $args)
-  {
-    if ($level <= $this->_output->getVerbosity()) {
-      $this->_output->writeln(call_user_func_array('sprintf', $args));
+    public function __construct(OutputInterface $output)
+    {
+        $this->_output = $output;
     }
-  }
+
+    public function info()
+    {
+        $this->_log_stdout(OutputInterface::VERBOSITY_NORMAL, func_get_args());
+    }
+
+    public function debug()
+    {
+        $this->_log_stdout(OutputInterface::VERBOSITY_DEBUG, func_get_args());
+    }
+
+    protected function _log_stdout($level, $args)
+    {
+        if ($level <= $this->_output->getVerbosity()) {
+            $this->_output->writeln(call_user_func_array('sprintf', $args));
+        }
+    }
 }

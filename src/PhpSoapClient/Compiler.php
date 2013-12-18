@@ -23,7 +23,7 @@ class Compiler
             ->name('*.php')
             ->notName('Compiler.php')
             ->in(__DIR__.'/..')
-        ;
+            ;
 
         foreach ($finder as $file) {
             $this->addFile($phar, $file);
@@ -35,7 +35,7 @@ class Compiler
             ->name('*.php')
             ->exclude('Tests')
             ->in(__DIR__.'/../../vendor/symfony/console/')
-        ;
+            ;
 
         foreach ($finder as $file) {
             $this->addFile($phar, $file);
