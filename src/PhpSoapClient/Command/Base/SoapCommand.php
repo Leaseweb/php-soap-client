@@ -8,7 +8,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 class SoapCommand extends Command
 {
   protected $logger;
@@ -24,16 +23,11 @@ class SoapCommand extends Command
   {
     $endpoint = $input->getOption('endpoint');
 
-    if (false === is_null($endpoint))
-    {
+    if (false === is_null($endpoint)) {
       return $endpoint;
-    }
-    elseif (true === array_key_exists('SOAPCLIENT_ENDPOINT', $_SERVER))
-    {
+    } elseif (true === array_key_exists('SOAPCLIENT_ENDPOINT', $_SERVER)) {
       return $_SERVER['SOAPCLIENT_ENDPOINT'];
-    }
-    else
-    {
+    } else {
       throw new \InvalidArgumentException('You must specify an endpoint.');
     }
   }
@@ -45,13 +39,10 @@ class SoapCommand extends Command
 
     $this->logger->debug('Discovering endpoint %s', $endpoint);
 
-    if (true === $cache)
-    {
+    if (true === $cache) {
       $this->logger->debug('Enabling caching of wsdl');
       $cache = WSDL_CACHE_MEMORY;
-    }
-    else
-    {
+    } else {
       $this->logger->debug('Wsdls are not being cached.');
       $cache = WSDL_CACHE_NONE;
     }

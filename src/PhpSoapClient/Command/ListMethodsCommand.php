@@ -6,7 +6,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use PhpSoapClient\Command\Base\SoapCommand;
 
-
 class ListMethodsCommand extends SoapCommand
 {
   protected function configure()
@@ -23,8 +22,7 @@ class ListMethodsCommand extends SoapCommand
 
     $this->logger->debug('Listing all available methods on the remote.');
 
-    foreach (array_keys($service->__getMethods()) as $method)
-    {
+    foreach (array_keys($service->__getMethods()) as $method) {
       $output->writeln($method);
     }
 

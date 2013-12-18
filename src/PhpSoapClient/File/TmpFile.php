@@ -12,8 +12,7 @@ class TmpFile
   {
     $tmpfile = tmpfile();
 
-    if (false === $tmpfile)
-    {
+    if (false === $tmpfile) {
       throw new \RuntimeException('Unable to create a tmp file');
     }
 
@@ -24,8 +23,7 @@ class TmpFile
 
   public function read()
   {
-    if (false === $this->is_resource())
-    {
+    if (false === $this->is_resource()) {
       throw new \RuntimeException('Lost track of the tmpfile');
     }
 
@@ -34,20 +32,17 @@ class TmpFile
 
   public function write($data, $offset=0)
   {
-    if (false === $this->is_resource())
-    {
+    if (false === $this->is_resource()) {
       throw new \RuntimeException('Lost track of the tmpfile');
     }
 
-    if (intval($offset) !== ftell($this->file))
-    {
+    if (intval($offset) !== ftell($this->file)) {
       fseek($this->file, $offset);
     }
 
     $bytes = fwrite($this->file, $data);
 
-    if (false === $bytes)
-    {
+    if (false === $bytes) {
       throw new \RuntimeException('Unable to write contents to tmpfile');
     }
 
@@ -63,8 +58,7 @@ class TmpFile
 
   public function wasExternallyModified()
   {
-    if (false === $this->is_resource())
-    {
+    if (false === $this->is_resource()) {
       throw new \RuntimeException('Lost track of the tmpfile');
     }
 
@@ -73,13 +67,11 @@ class TmpFile
 
   public function destroy()
   {
-    if (true === $this->is_resource())
-    {
+    if (true === $this->is_resource()) {
       fclose($this->file);
     }
 
-    if (true === is_file($this->filename()))
-    {
+    if (true === is_file($this->filename())) {
       @unlink($this->filename());
     }
 

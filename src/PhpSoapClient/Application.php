@@ -5,7 +5,6 @@ namespace PhpSoapClient;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputOption;
 
-
 class Application extends BaseApplication
 {
   protected static $NAME = 'php-soap-client';

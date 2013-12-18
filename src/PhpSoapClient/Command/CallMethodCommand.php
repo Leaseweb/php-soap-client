@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use PhpSoapClient\Helper\EditorHelper;
 use PhpSoapClient\Helper\StdinHelper;
 
-
 class CallMethodCommand extends SoapCommand
 {
   protected function configure()
@@ -46,8 +45,7 @@ class CallMethodCommand extends SoapCommand
     $service = $this->getSoapClient($input);
     $method = $input->getArgument('method');
 
-    if (true === $input->getOption('editor'))
-    {
+    if (true === $input->getOption('editor')) {
       $editor = new EditorHelper();
 
       $this->logger->debug('Getting request xml from the server');
@@ -58,22 +56,16 @@ class CallMethodCommand extends SoapCommand
 
       unset($editor);
 
-      if (0 === strcmp((string)$request_xml, $empty_request))
-      {
+      if (0 === strcmp((string) $request_xml, $empty_request)) {
         $this->logger->debug('File wasn\'t modified');
-      }
-      else
-      {
+      } else {
         $this->logger->debug('File was modified using the editor');
       }
-    }
-    else
-    {
+    } else {
       $stdin = new StdinHelper();
       $request_xml = $stdin->read(false);
 
-      if (null === $request_xml)
-      {
+      if (null === $request_xml) {
         $this->logger->info('Create xml request below and finish with <info>ctrl+d</info>:');
         $request_xml = $stdin->read(true);
       }
@@ -83,12 +75,9 @@ class CallMethodCommand extends SoapCommand
     $this->logger->debug('Calling method %s on the remote', $method);
     $start_time = microtime(true);
 
-    if (true === $input->getOption('xml'))
-    {
+    if (true === $input->getOption('xml')) {
       $response = $service->__getResponseXmlForMethod($method, $request_xml);
-    }
-    else
-    {
+    } else {
       $response = $service->__getResponseObjectForMethod($method, $request_xml);
     }
 

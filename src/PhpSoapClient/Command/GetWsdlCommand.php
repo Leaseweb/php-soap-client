@@ -6,7 +6,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use PhpSoapClient\Command\Base\SoapCommand;
 
-
 class GetWsdlCommand extends SoapCommand
 {
   protected function configure()

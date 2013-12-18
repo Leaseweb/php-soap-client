@@ -4,8 +4,6 @@ namespace PhpSoapClient\Helper;
 
 use PhpSoapClient\File\TmpFile;
 
-
-
 class EditorHelper
 {
   protected $editor;
@@ -14,8 +12,7 @@ class EditorHelper
   {
     $this->editor = empty($editor) ? @$_SERVER['EDITOR'] : $editor;
 
-    if (true === empty($this->editor))
-    {
+    if (true === empty($this->editor)) {
       throw new \InvalidArgumentException('No favorite $EDITOR found');
     }
   }
@@ -34,8 +31,7 @@ class EditorHelper
   {
     $tmpfile = new TmpFile();
 
-    if (false === is_null($contents))
-    {
+    if (false === is_null($contents)) {
       $tmpfile->write($contents);
     }
 
@@ -43,8 +39,7 @@ class EditorHelper
 
     system("$this->editor $filename > `tty`", $retval);
 
-    if (0 !== $retval)
-    {
+    if (0 !== $retval) {
       throw new \RuntimeException('Something went wrong with tmp file');
     }
 

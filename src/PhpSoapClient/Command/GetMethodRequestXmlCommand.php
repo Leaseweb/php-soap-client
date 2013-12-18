@@ -7,7 +7,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use PhpSoapClient\Command\Base\SoapCommand;
 use Symfony\Component\Console\Input\InputArgument;
 
-
 class GetMethodRequestXmlCommand extends SoapCommand
 {
   protected function configure()
