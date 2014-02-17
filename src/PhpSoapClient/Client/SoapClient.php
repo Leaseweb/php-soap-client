@@ -134,7 +134,11 @@ class SoapClient extends \SoapClient implements LoggerAwareInterface
     protected function __parseAllMethods()
     {
         $this->methods = array();
-        foreach ($this->__getFunctions() as $raw_method) {
+        $functions = $this->__getFunctions();
+
+        foreach ($functions as $raw_method) {
+            $this->logger->debug('Found method: ' . $raw_method);
+
             preg_match('/(?P<response>\w+) (?P<method>\w+)\((?P<args>[^\)]+)/', $raw_method, $matches);
 
             foreach (explode(', ', $matches['args']) as $arg) {
@@ -149,28 +153,45 @@ class SoapClient extends \SoapClient implements LoggerAwareInterface
     protected function __parseAllStructs()
     {
         $this->structs = array();
-
         $types = $this->__getTypes();
 
+        $this->logger->debug('Found following structs in WSDL: ' . var_export($types, 1));
+
         foreach ($types as $raw_struct) {
-            preg_match('/struct (?P<name>\w+) {/', $raw_struct, $matches);
-            if (false === isset($matches['name'])) {
+            try {
+                $struct = $this->__parseSingleStruct($raw_struct);
+            }
+            catch (\RuntimeException $e) {
+                $this->logger->warning("Could not parse struct: $raw_struct");
                 continue;
             }
-            $this->structs[$matches['name']] = $this->__parseSingleStruct($raw_struct);
-            unset($matches);
+
+            $this->logger->debug("Found struct `" . $struct['name'] . "` with arguments " .var_export($struct['body'], 1));
+
+            $this->structs[$struct['name']] = $struct['body'];
         }
     }
 
     protected function __parseSingleStruct($raw_struct)
     {
-        $body = array();
-        preg_match_all('/(?P<struct>\w+) (?P<property>\w+);/', $raw_struct, $matches);
-        foreach ($matches['property'] as $i => $prop) {
-            $body[$prop] = $matches['struct'][$i];
-        }
-        unset($matches);
+        preg_match('/struct (?P<name>\w+) {/', $raw_struct, $matches);
 
-        return $body;
+        if (false === isset($matches['name'])) {
+            throw new \RuntimeException('Could not parse struct name');
+        }
+
+        $name = $matches['name'];
+        $body = array();
+
+        preg_match_all('/(?P<struct>\w+) (?P<property>\w+);/', $raw_struct, $matches2);
+
+        foreach ($matches2['property'] as $i => $prop) {
+            $body[$prop] = $matches2['struct'][$i];
+        }
+
+        return array(
+            'name' => $name,
+            'body' => $body
+        );
     }
 }
