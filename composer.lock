@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "0ad73808d8e56de2f53db78686c2ecef",
+    "hash": "2ef1e6882f2307f0b4fbd3fe9ac5d56d",
     "packages": [
         {
             "name": "pimple/pimple",
@@ -992,6 +992,52 @@
                 "xunit"
             ],
             "time": "2013-01-13 10:24:48"
+        },
+        {
+            "name": "piotrooo/wsdl-creator",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/piotrooo/wsdl-creator.git",
+                "reference": "f868499258881765eff51ddbadaf491993625bcb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/piotrooo/wsdl-creator/zipball/f868499258881765eff51ddbadaf491993625bcb",
+                "reference": "f868499258881765eff51ddbadaf491993625bcb",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.19"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "WSDL\\": "src/",
+                    "Mocks\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Piotr Olaszewski",
+                    "email": "piotroo89@gmai.com"
+                }
+            ],
+            "description": "PHP WSDL creator using PHPdoc (annotations, reflections).",
+            "keywords": [
+                "annotations",
+                "creator",
+                "generator",
+                "php",
+                "reflections",
+                "soap",
+                "wsdl"
+            ],
+            "time": "2013-10-15 21:00:12"
         },
         {
             "name": "squizlabs/php_codesniffer",

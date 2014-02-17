@@ -17,7 +17,8 @@
     "require-dev": {
         "phpunit/phpunit": "3.7.22",
         "phpmd/phpmd" : "1.4.*",
-        "squizlabs/php_codesniffer": "1.*"
+        "squizlabs/php_codesniffer": "1.*",
+        "piotrooo/wsdl-creator": "1.0.0"
     },
     "autoload": {
         "psr-0": {"": "src/"}
