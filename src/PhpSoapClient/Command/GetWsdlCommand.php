@@ -20,8 +20,8 @@ class GetWsdlCommand extends SoapCommand
     {
         $endpoint = $this->getEndpoint($input);
 
-        $this->logger->debug('Exploring wsdl at %s', $endpoint);
+        $this->logger->info('Exploring wsdl at ' . $endpoint);
         $output->writeln(file_get_contents($endpoint));
-        $this->logger->debug('Done');
+        $this->logger->debug('Done.');
     }
 }

@@ -2,9 +2,14 @@
 
 namespace PhpSoapClient\Client;
 
-class SoapClient extends \SoapClient
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+
+class SoapClient extends \SoapClient implements LoggerAwareInterface
 {
     protected $default_value = '%%?%%';
+
+    protected $logger;
 
     protected $structs;
     protected $methods;
@@ -15,10 +20,23 @@ class SoapClient extends \SoapClient
             ini_set('soap.wsdl_cache_enabled', $options['cache_wsdl']);
         }
 
+        if (true === isset($options['logger'])) {
+            $this->setLogger($options['logger']);
+            unset($options['logger']);
+        }
+
         parent::__construct($endpoint, $options);
 
         $this->__parseAllStructs();
         $this->__parseAllMethods();
+    }
+
+    /*
+     * Setter for logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     public function __getStructs()
@@ -131,7 +149,10 @@ class SoapClient extends \SoapClient
     protected function __parseAllStructs()
     {
         $this->structs = array();
-        foreach ($this->__getTypes() as $raw_struct) {
+
+        $types = $this->__getTypes();
+
+        foreach ($types as $raw_struct) {
             preg_match('/struct (?P<name>\w+) {/', $raw_struct, $matches);
             if (false === isset($matches['name'])) {
                 continue;

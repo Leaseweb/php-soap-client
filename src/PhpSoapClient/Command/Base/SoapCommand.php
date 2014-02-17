@@ -37,7 +37,7 @@ class SoapCommand extends Command
         $cache = $input->getOption('cache');
         $endpoint = $this->getEndpoint($input);
 
-        $this->logger->debug('Discovering endpoint %s', $endpoint);
+        $this->logger->info('Discovering endpoint ' . $endpoint);
 
         if (true === $cache) {
             $this->logger->debug('Enabling caching of wsdl');
@@ -48,9 +48,10 @@ class SoapCommand extends Command
         }
 
         ini_set('default_socket_timeout', $timeout);
-        $this->logger->debug('Set socket timeout to %s seconds.', $timeout);
+        $this->logger->debug("Set socket timeout to $timeout seconds.");
 
         return new SoapClient($endpoint, array(
+            'logger' => $this->logger,
             'trace' => 1,
             'exceptions' => true,
             'connection_timeout' => $timeout,

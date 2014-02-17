@@ -20,7 +20,7 @@ class ListMethodsCommand extends SoapCommand
     {
         $service = $this->getSoapClient($input);
 
-        $this->logger->debug('Listing all available methods on the remote.');
+        $this->logger->info('Listing all available methods on the remote.');
 
         foreach (array_keys($service->__getMethods()) as $method) {
             $output->writeln($method);

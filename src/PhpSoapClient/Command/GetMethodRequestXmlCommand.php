@@ -27,7 +27,7 @@ class GetMethodRequestXmlCommand extends SoapCommand
         $service = $this->getSoapClient($input);
         $method = $input->getArgument('method');
 
-        $this->logger->debug('Generating request for %s on remote', $method);
+        $this->logger->debug("Generating request for $method on remote");
 
         $output->writeln($service->__getRequestXmlForMethod($method));
 
