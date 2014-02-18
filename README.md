@@ -15,7 +15,7 @@ the `help`:
 
 This will output something like:
 
-    php-soap-client version 2.1.3
+    php-soap-client version 2.1.4
 
     Usage:
       [options] command [arguments]
