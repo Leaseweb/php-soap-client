@@ -66,7 +66,7 @@ class CallMethodCommand extends SoapCommand
             $request_xml = $stdin->read(false);
 
             if (null === $request_xml) {
-                $this->logger->info('Create xml request below and finish with <info>ctrl+d</info>:');
+                $this->logger->warning('Create xml request below and finish with <info>ctrl+d</info>:');
                 $request_xml = $stdin->read(true);
             }
             unset($stdin);

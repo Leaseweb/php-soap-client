@@ -18,12 +18,22 @@ class TestService
     /**
      * SayHello
      *
-     * @param string $name
+     * @param $name
      * @return string
      */
     public function SayHello($name)
     {
         return sprintf("Hello %s", $name);
+    }
+
+    /**
+     * GetCurrentDate
+     *
+     * @return string
+     */
+    public function GetCurrentDate()
+    {
+        return time();
     }
 
     /**

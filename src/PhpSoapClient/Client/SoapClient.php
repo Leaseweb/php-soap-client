@@ -139,11 +139,18 @@ class SoapClient extends \SoapClient implements LoggerAwareInterface
         foreach ($functions as $raw_method) {
             $this->logger->debug('Found method: ' . $raw_method);
 
-            preg_match('/(?P<response>\w+) (?P<method>\w+)\((?P<args>[^\)]+)/', $raw_method, $matches);
+            preg_match('/(?P<response>\w+) (?P<method>\w+)\((?P<args>[^\)]*)\)/', $raw_method, $matches);
 
             foreach (explode(', ', $matches['args']) as $arg) {
+                if (true === empty($arg)) {
+                    $this->methods[$matches['method']] = [];
+                    continue;
+                }
+
                 preg_match('/(?P<type>\w+) \$(?P<name>\w+)/', $arg, $matches2);
+
                 $this->methods[$matches['method']][$matches2['name']] = $matches2['type'];
+
                 unset($matches2);
             }
             unset($matches);
@@ -155,7 +162,11 @@ class SoapClient extends \SoapClient implements LoggerAwareInterface
         $this->structs = array();
         $types = $this->__getTypes();
 
-        $this->logger->debug('Found following structs in WSDL: ' . var_export($types, 1));
+        if (true === empty($types)) {
+            $this->logger->debug('Found 0 structs in WSDL');
+        } else {
+            $this->logger->debug('Found following structs in WSDL: ' . var_export($types, 1));
+        }
 
         foreach ($types as $raw_struct) {
             try {
