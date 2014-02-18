@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 class Application extends BaseApplication
 {
     protected static $NAME = 'php-soap-client';
-    protected static $VERSION = '2.1.3';
+    protected static $VERSION = '2.1.4';
 
     public function __construct()
     {
