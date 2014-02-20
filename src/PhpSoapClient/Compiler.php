@@ -6,11 +6,15 @@ use Symfony\Component\Finder\Finder;
 
 class Compiler
 {
-    public function compile($pharFile = 'soap_client.phar')
+    private $verbose = true;
+
+    public function compile($pharFile = 'soap_client.phar', $verbose = true)
     {
         if (file_exists($pharFile)) {
             unlink($pharFile);
         }
+
+        $this->verbose = $verbose;
 
         $phar = new \Phar($pharFile, 0, 'soap_client.phar');
         $phar->setSignatureAlgorithm(\Phar::SHA1);
@@ -35,6 +39,18 @@ class Compiler
             ->name('*.php')
             ->exclude('Tests')
             ->in(__DIR__.'/../../vendor/symfony/console/')
+            ;
+
+        foreach ($finder as $file) {
+            $this->addFile($phar, $file);
+        }
+
+        $finder = new Finder();
+        $finder->files()
+            ->ignoreVCS(true)
+            ->name('*.php')
+            ->exclude('Tests')
+            ->in(__DIR__.'/../../vendor/psr/log/')
             ;
 
         foreach ($finder as $file) {
@@ -67,6 +83,10 @@ class Compiler
     {
         $path = str_replace(dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR, '', $file->getRealPath());
 
+        if ($this->verbose) {
+            $this->debug('Adding ' . $path);
+        }
+
         $content = file_get_contents($file);
         if ($strip) {
             $content = $this->stripWhitespace($content);
@@ -79,6 +99,10 @@ class Compiler
 
     private function addBin($phar)
     {
+        if ($this->verbose) {
+            $this->debug('Adding binary to ' . $phar);
+        }
+
         $content = file_get_contents(__DIR__.'/../../bin/soap_client');
         $content = preg_replace('{^#!/usr/bin/env php\s*}', '', $content);
         $phar->addFromString('bin/soap_client', $content);
@@ -110,6 +134,11 @@ class Compiler
         }
 
         return $output;
+    }
+
+    private function debug($message)
+    {
+        echo "[debug] " . $message . PHP_EOL;
     }
 
     private function getStub()

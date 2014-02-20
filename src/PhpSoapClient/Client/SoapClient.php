@@ -143,7 +143,7 @@ class SoapClient extends \SoapClient implements LoggerAwareInterface
 
             foreach (explode(', ', $matches['args']) as $arg) {
                 if (true === empty($arg)) {
-                    $this->methods[$matches['method']] = [];
+                    $this->methods[$matches['method']] = array();
                     continue;
                 }
 
