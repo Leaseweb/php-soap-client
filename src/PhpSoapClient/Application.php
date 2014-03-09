@@ -19,10 +19,10 @@ class Application extends BaseApplication
     {
         $commands = parent::getDefaultCommands();
 
-        $commands[] = new \PhpSoapClient\Command\GetWsdlCommand();
-        $commands[] = new \PhpSoapClient\Command\CallMethodCommand();
-        $commands[] = new \PhpSoapClient\Command\GetMethodRequestXmlCommand();
-        $commands[] = new \PhpSoapClient\Command\ListMethodsCommand();
+        $commands[] = new Command\GetWsdlCommand();
+        $commands[] = new Command\CallMethodCommand();
+        $commands[] = new Command\GetMethodRequestXmlCommand();
+        $commands[] = new Command\ListMethodsCommand();
 
         return $commands;
     }
