@@ -19,12 +19,7 @@ bump:
 	git add $(APP_FILE)
 	git commit -m 'Bumped version number to $(version)'
 	git tag -m 'Mark stable release version $(version)' -a $(version)
-	@echo "Version $(version) commited and tagged. You can 'make push' or 'make upload' now :)"
-
-
-.PHONY: tags
-tags:
-	ctags -R --PHP-kinds=+cf-v --exclude=build --exclude=*.phar src/ vendor/ bin/ tests/
+	@echo "Version $(version) commited and tagged. You can push your changes now :)"
 
 
 .PHONY: clean
@@ -47,13 +42,6 @@ phpmd:
 .PHONY: coverage
 coverage: clean
 	vendor/bin/phpunit -c tests/ --coverage-html ./build/coverage
-
-
-# Push to github but run tests first
-.PHONY: push
-push: test
-	git push origin HEAD
-	git push origin --tags
 
 
 # Install the binary into /usr/local/bin

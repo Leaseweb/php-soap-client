@@ -1,0 +1,12 @@
+--recurse
+--languages=PHP
+--PHP-kinds=+cf-v
+
+--exclude=soap_client.phar
+--exclude=build
+--exclude=vendor/bin
+--exclude=vendor/composer
+--exclude=vendor/pdepend
+--exclude=vendor/phpmd
+--exclude=vendor/phpunit
+--exclude=vendor/squizlabs
