@@ -1,0 +1,61 @@
+---
+services:
+  symfony.event_dispatcher:
+    class: Symfony\Component\EventDispatcher\EventDispatcher
+    calls:
+      - [addListener, ["console.command", ["@symfony.command_listener", 'onCommandAction']]]
+
+  symfony.command_listener:
+    class: App\Listener\CommandEventListener
+    arguments:
+      - "@service_container"
+
+  symfony.application:
+    class: Symfony\Component\Console\Application
+    arguments:
+      - "php-soap-client"
+      - "3.0.0"
+    calls:
+      - [setDispatcher, ["@symfony.event_dispatcher"]]
+      - [add, ["@console_command.get_wsdl"]]
+      - [add, ["@console_command.list_methods"]]
+      - [add, ["@console_command.get_method_request_xml"]]
+      - [add, ["@console_command.call_method"]]
+
+  symfony.console_output:
+    class: Symfony\Component\Console\Output\ConsoleOutput
+
+  symfony.console_logger:
+    class: Symfony\Component\Console\Logger\ConsoleLogger
+    arguments:
+      - "@symfony.console_output"
+
+  console_command.call_method:
+    class: App\Command\CallMethodCommand
+    calls:
+      - [setLogger, ["@symfony.console_logger"]]
+
+  console_command.get_method_request_xml:
+    class: App\Command\GetMethodRequestXmlCommand
+    calls:
+      - [setLogger, ["@symfony.console_logger"]]
+
+  console_command.get_wsdl:
+    class: App\Command\GetWsdlCommand
+    calls:
+      - [setLogger, ["@symfony.console_logger"]]
+
+  console_command.list_methods:
+    class: App\Command\ListMethodsCommand
+    calls:
+      - [setLogger, ["@symfony.console_logger"]]
+
+  soap_client:
+    class: App\Client\SoapClient
+    arguments:
+      - "%soap_endpoint%"
+      - cache_wsdl: "%soap_cache_wsdl%"
+        trace: 1
+        exceptions: true
+        connection_timeout: "%timeout%"
+        logger: "@symfony.console_logger"
