@@ -26,7 +26,7 @@ class ListMethodsCommand extends Command implements LoggerAwareInterface
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         foreach (array_keys($this->soapClient->__getMethods()) as $method) {
-            $output->writeln($method);
+            $output->writeln((string) $method);
         }
     }
 }

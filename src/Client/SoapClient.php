@@ -15,6 +15,7 @@ class SoapClient extends \SoapClient implements LoggerAwareInterface
 
     protected $structs;
     protected $methods;
+    protected $_requestXml;
 
     public function __construct($endpoint, $options = [])
     {
@@ -171,7 +172,7 @@ class SoapClient extends \SoapClient implements LoggerAwareInterface
         if (true === empty($types)) {
             $this->logger->debug('Found 0 structs in WSDL');
         } else {
-            $this->logger->debug('Found following structs in WSDL: ' . print_r($types, 1));
+            $this->logger->debug('Found following structs in WSDL: ' . print_r($types, true));
         }
 
         foreach ($types as $raw_struct) {
@@ -182,7 +183,7 @@ class SoapClient extends \SoapClient implements LoggerAwareInterface
                 continue;
             }
 
-            $this->logger->debug('Found struct `' . $struct['name'] . '` with arguments ' .print_r($struct['body'], 1));
+            $this->logger->debug('Found struct `' . $struct['name'] . '` with arguments ' . print_r($struct['body'], true));
 
             $this->structs[$struct['name']] = $struct['body'];
         }

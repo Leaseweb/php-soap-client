@@ -13,7 +13,7 @@ class StdinHelper
         }
 
         if (false === is_null($blocking)) {
-            stream_set_blocking($stream, (bool) $blocking ? 1 : 0);
+            stream_set_blocking($stream, (bool) $blocking);
         }
 
         $buffer = null;

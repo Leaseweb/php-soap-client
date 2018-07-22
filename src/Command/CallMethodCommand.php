@@ -75,6 +75,6 @@ class CallMethodCommand extends Command implements LoggerAwareInterface
         $this->logger->debug('Calling method took ' . (microtime(true) - $start_time) . ' seconds');
         unset($start_time);
 
-        $output->writeln(print_r($response, true));
+        $output->writeln((string) print_r($response, true));
     }
 }

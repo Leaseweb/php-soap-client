@@ -12,7 +12,7 @@ class TmpFile
     {
         $tmpfile = tmpfile();
 
-        if (false === $tmpfile) {
+        if (!is_resource($tmpfile)) {
             throw new \RuntimeException('Unable to create a tmp file');
         }
 
