@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+set_time_limit(0);
+
+require_once __DIR__.'/../vendor/autoload.php';
+
+$input = new ArgvInput();
+$config = $input->getParameterOption(['--config', '-c'], $_SERVER['APP_CONFIG'] ?? 'soap_client.yml', true);
+
+$container = new ContainerBuilder();
+$loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../config'));
+$loader->load('app.yml');
+$loader->load('parameters.yml');
+
+if (file_exists($config)) {
+    $loader->load(realpath($config));
+}
+
+$container->get('symfony.application')->run($input, $container->get('symfony.console_output'));

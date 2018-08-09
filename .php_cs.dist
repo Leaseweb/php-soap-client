@@ -1,0 +1,5 @@
+<?php
+
+$finder = PhpCsFixer\Finder::create()->in("src")->in("tests");
+
+return PhpCsFixer\Config::create()->setRules(array('@PSR2' => true, '@Symfony' => true, 'concat_space' => false))->setFinder($finder);

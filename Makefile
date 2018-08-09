@@ -31,7 +31,7 @@ clean:
 # Test everything
 .PHONY: test
 test: clean
-	vendor/bin/phpunit -c tests/
+	vendor/bin/phpunit
 
 
 .PHONY: phpmd

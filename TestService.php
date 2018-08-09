@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/src/bootstrap.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 ini_set("soap.wsdl_cache_enabled", "0"); // disabling WSDL cache
 
