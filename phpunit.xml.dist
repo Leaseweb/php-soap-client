@@ -16,10 +16,7 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory>../src/PhpSoapClient/</directory>
-            <exclude>
-              <file>../src/PhpSoapClient/Compiler.php</file>
-            </exclude>
+            <directory>../src/</directory>
         </whitelist>
     </filter>
 </phpunit>

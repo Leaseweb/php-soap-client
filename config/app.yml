@@ -14,7 +14,7 @@ services:
     class: Symfony\Component\Console\Application
     arguments:
       - "php-soap-client"
-      - "3.0.0"
+      - "3.0.1"
     calls:
       - [setDispatcher, ["@symfony.event_dispatcher"]]
       - [add, ["@console_command.get_wsdl"]]
