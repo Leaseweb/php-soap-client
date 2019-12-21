@@ -12,4 +12,4 @@ jobs:
     - name: Run test suite
       run: vendor/bin/phpunit --coverage-text
     - name: Create phar archive
-      run: bin/compile
+      run: php -d phar.readonly=0 bin/compile
