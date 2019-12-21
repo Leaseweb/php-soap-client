@@ -2,10 +2,7 @@
 
 namespace App\Client;
 
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
-
-class SoapClient extends \SoapClient implements LoggerAwareInterface
+class SoapClient extends \SoapClient
 {
     protected $default_value = '%%?%%';
 
@@ -24,7 +21,7 @@ class SoapClient extends \SoapClient implements LoggerAwareInterface
         }
 
         if (true === isset($options['logger'])) {
-            $this->setLogger($options['logger']);
+            $this->logger = $options['logger'];
             unset($options['logger']);
         }
 
@@ -34,11 +31,6 @@ class SoapClient extends \SoapClient implements LoggerAwareInterface
 
         $this->__parseAllStructs();
         $this->__parseAllMethods();
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
     }
 
     public function getWsdl()

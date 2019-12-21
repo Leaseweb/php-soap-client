@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Test\Helper;
+namespace App\Helper;
 
-use App\Helper\StdinHelper;
 use PHPUnit\Framework\TestCase;
 
 class StdinHelperTest extends TestCase

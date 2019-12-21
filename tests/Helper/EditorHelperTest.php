@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Test\Helper;
+namespace App\Helper;
 
-use App\Helper\EditorHelper;
 use PHPUnit\Framework\TestCase;
 
 class EditorHelperTest extends TestCase
@@ -25,11 +24,7 @@ class EditorHelperTest extends TestCase
 
         $editor = new EditorHelper();
 
-        $this->assertEquals(
-      'vim',
-      $editor->getEditor(),
-      '::getEditor() gets the name of the editor'
-    );
+        $this->assertEquals('vim', $editor->getEditor(), '::getEditor() gets the name of the editor');
     }
 
     /**
@@ -56,19 +51,11 @@ class EditorHelperTest extends TestCase
     {
         $editor = new EditorHelper('nano');
 
-        $this->assertEquals(
-      'nano',
-      $editor->getEditor(),
-      '::getEditor() gets the name of the editor'
-    );
+        $this->assertEquals('nano', $editor->getEditor(), '::getEditor() gets the name of the editor');
 
         $editor->setEditor('vim');
 
-        $this->assertEquals(
-      'vim',
-      $editor->getEditor(),
-      '::getEditor() gets the name of the editor'
-    );
+        $this->assertEquals('vim', $editor->getEditor(), '::getEditor() gets the name of the editor');
     }
 
     /**
@@ -89,5 +76,7 @@ class EditorHelperTest extends TestCase
 
         $editor = new EditorHelper('vim');
         $content = $editor->open_and_read('test');
+
+        $this->assertEquals('test', $content);
     }
 }

@@ -7,16 +7,15 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         syntaxCheck="false"
          bootstrap="tests/bootstrap.php">
     <testsuites>
         <testsuite name="Full Composer Test Suite">
-            <directory>tests</directory>
+            <directory>tests/</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory>../src/</directory>
+            <directory>src/</directory>
         </whitelist>
     </filter>
 </phpunit>

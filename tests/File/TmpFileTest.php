@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Test\File;
+namespace App\File;
 
-use App\File\TmpFile;
 use PHPUnit\Framework\TestCase;
 
 class TmpFileTest extends TestCase

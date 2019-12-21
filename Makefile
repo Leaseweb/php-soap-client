@@ -23,7 +23,7 @@ phpmd:
 
 .PHONY: coverage
 coverage: clean
-	vendor/bin/phpunit -c tests/ --coverage-html ./build/coverage
+	vendor/bin/phpunit --coverage-text
 
 
 # Install the binary into /usr/local/bin

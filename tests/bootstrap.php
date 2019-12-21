@@ -57,11 +57,3 @@ namespace App\File
       return \fwrite($file, $data);
   }
 }
-
-// namespace
-// {
-//   error_reporting(E_ALL);
-
-//   $loader = require __DIR__.'/../src/bootstrap.php';
-//   $loader->add('App\Test', __DIR__);
-// }

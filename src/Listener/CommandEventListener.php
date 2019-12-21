@@ -27,6 +27,10 @@ class CommandEventListener
         // TODO also get data from environment variables now
         // TODO handle endpoint values from configuration
 
+        if (!$input->getOption('endpoint')) {
+            throw new \InvalidArgumentException('You must specify an endpoint.');
+        }
+
         $this->container->setParameter('soap_endpoint', $input->getOption('endpoint'));
         $this->container->setParameter('soap_cache_wsdl', true === $input->getOption('cache') ? WSDL_CACHE_MEMORY : WSDL_CACHE_NONE);
 
