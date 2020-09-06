@@ -3,20 +3,24 @@
 namespace App\Listener;
 
 use App\Command\Base\SoapCommand;
+use InvalidArgumentException;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 
 class CommandEventListener
 {
     protected $container;
 
-    public function __construct($container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
-    public function onCommandAction(ConsoleCommandEvent $event)
+    public function onCommandAction(ConsoleCommandEvent $event): void
     {
-        $command = $event->getCommand();
+        if (!$command = $event->getCommand()) {
+            return;
+        }
 
         if (!in_array(SoapCommand::class, class_uses($command))) {
             return;
@@ -28,7 +32,7 @@ class CommandEventListener
         // TODO handle endpoint values from configuration
 
         if (!$input->getOption('endpoint')) {
-            throw new \InvalidArgumentException('You must specify an endpoint.');
+            throw new InvalidArgumentException('You must specify an endpoint.');
         }
 
         $this->container->setParameter('soap_endpoint', $input->getOption('endpoint'));

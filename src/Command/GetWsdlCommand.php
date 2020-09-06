@@ -23,8 +23,10 @@ class GetWsdlCommand extends Command implements LoggerAwareInterface
         $this->configureSoapOptions();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln($this->soapClient->getWsdl());
+
+        return 0;
     }
 }

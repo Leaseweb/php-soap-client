@@ -9,12 +9,12 @@ trait SoapCommand
 {
     protected $soapClient;
 
-    public function setSoapClient(SoapClient $soapClient)
+    public function setSoapClient(SoapClient $soapClient): void
     {
         $this->soapClient = $soapClient;
     }
 
-    protected function configureSoapOptions()
+    protected function configureSoapOptions(): void
     {
         $this->addOption('config', null, InputOption::VALUE_REQUIRED, 'The location to the configuration file', 'soap_client.yml');
         $this->addOption('endpoint', null, InputOption::VALUE_REQUIRED, 'Specify the url to the wsdl of the SOAP webservice to inspect');

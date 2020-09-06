@@ -1,0 +1,8 @@
+{
+  "output": "build/soap_client.phar",
+  "algorithm": "SHA512",
+  "force-autodiscovery": true,
+  "directories": [
+    "config"
+  ]
+}

@@ -8,7 +8,7 @@ class EditorHelper
 {
     protected $editor;
 
-    public function __construct($editor = null)
+    public function __construct(string $editor = null)
     {
         $this->editor = empty($editor) ? @$_SERVER['EDITOR'] : $editor;
 
@@ -17,17 +17,17 @@ class EditorHelper
         }
     }
 
-    public function getEditor()
+    public function getEditor(): string
     {
         return $this->editor;
     }
 
-    public function setEditor($editor)
+    public function setEditor(string $editor): void
     {
         $this->editor = $editor;
     }
 
-    public function open_and_read($contents = null)
+    public function open_and_read(string $contents = null): string
     {
         $tmpfile = new TmpFile();
 

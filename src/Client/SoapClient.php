@@ -2,7 +2,9 @@
 
 namespace App\Client;
 
-class SoapClient extends \SoapClient
+use SoapClient as PhpSoapClient;
+
+class SoapClient extends PhpSoapClient
 {
     protected $default_value = '%%?%%';
 

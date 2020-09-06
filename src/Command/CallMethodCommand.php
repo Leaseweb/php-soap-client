@@ -32,7 +32,7 @@ class CallMethodCommand extends Command implements LoggerAwareInterface
         $this->addArgument('method', InputArgument::REQUIRED, 'The name of the remote method');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $method = $input->getArgument('method');
 
@@ -76,5 +76,7 @@ class CallMethodCommand extends Command implements LoggerAwareInterface
         unset($start_time);
 
         $output->writeln((string) print_r($response, true));
+
+        return 0;
     }
 }

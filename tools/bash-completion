@@ -20,7 +20,7 @@ _soap_client_completions()
                         opts="--help --cache --endpoint --quiet --xml --use-editor --verbose -e -q -h -c -x -u -v list wsdl call request"
                         ;;
         esac
-               
+
         COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
         return 0
 }

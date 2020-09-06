@@ -1,5 +1,3 @@
-/soap_client.phar
-
-/vendor/
-/build
 /.php_cs.cache
+/build
+/vendor/

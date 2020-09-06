@@ -12,12 +12,15 @@ jobs:
     - name: Run test suite
       run: vendor/bin/phpunit --coverage-text
     - name: Create phar archive
-      run: php -d phar.readonly=0 bin/compile
+      run: |
+        wget https://github.com/box-project/box/releases/download/3.8.5/box.phar
+        mkdir -p build
+        php -d phar.readonly=0 box.phar compile
     - uses: actions/upload-artifact@master
       if: startsWith(github.ref, 'refs/tags/')
       with:
         name: soap_client.phar
-        path: soap_client.phar
+        path: build/soap_client.phar
   release:
     runs-on: ubuntu-latest
     needs: build

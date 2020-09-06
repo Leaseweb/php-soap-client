@@ -4,7 +4,7 @@ namespace App\Helper;
 
 class StdinHelper
 {
-    public function read($blocking = null)
+    public function read(bool $blocking = null): string
     {
         $stream = fopen('php://stdin', 'r');
 
@@ -16,7 +16,7 @@ class StdinHelper
             stream_set_blocking($stream, (bool) $blocking);
         }
 
-        $buffer = null;
+        $buffer = '';
 
         while ($line = fgets($stream, 4096)) {
             $buffer .= $line;
